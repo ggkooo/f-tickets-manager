@@ -1,5 +1,5 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
-import type { UnilabLocation } from '../locations';
+import type { LocationSlug } from '../locations';
 import { withLocationQuery } from '../locations';
 import type { TvMedia, TvMediaType, TvTicket } from '../screens/TV/types';
 
@@ -106,7 +106,7 @@ const buildMediaEntry = (path: string, type: TvMediaType): TvMedia => ({
     createdAt: new Date().toISOString(),
 });
 
-export const fetchRecentlyCalledTickets = async (location: UnilabLocation) => {
+export const fetchRecentlyCalledTickets = async (location: LocationSlug) => {
     const response = await request(
         withLocationQuery(RECENTLY_CALLED_PATH, location),
         {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Badge from '../../../components/ui/Badges';
+import type { ServiceColor } from '../../../constants/serviceTypeColors';
 import type { TvTicket } from '../types';
 import { formatCounterLabel, getServiceBadgeColor } from '../utils';
 
@@ -11,7 +12,7 @@ interface RecentCallsPanelProps {
 
 interface ServiceTypeBadgeProps {
     serviceType: string;
-    color: string;
+    color: ServiceColor;
 }
 
 const ServiceTypeBadge = ({ serviceType, color }: ServiceTypeBadgeProps) => {

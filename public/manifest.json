@@ -1,6 +1,6 @@
 {
-  "name": "UniLab Totem",
-  "short_name": "UniLab Totem",
+  "name": "Totem de Atendimento",
+  "short_name": "Totem",
   "start_url": "/",
   "scope": "/",
   "display": "fullscreen",

@@ -13,7 +13,7 @@ const LoginCard: React.FC<LoginCardProps> = ({ children }) => {
                     account_circle
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Acesso Restrito</h2>
-                <p className="text-slate-500 mt-1.5">Área do Atendente Hospitalar</p>
+                <p className="text-slate-500 mt-1.5">Área do Atendente</p>
             </div>
 
             {children}

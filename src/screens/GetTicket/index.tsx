@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import { DEFAULT_UNILAB_LOCATION } from '../../locations';
-import { useRouteLocation } from '../../locations/useRouteLocation';
+import { useRouteInstitution, useRouteLocation } from '../../locations/useRouteLocation';
 import { createTicket } from '../../services/ticketService.ts';
-import { SERVICE_OPTIONS } from './constants';
+import { getServiceOptions } from './constants';
 import GetTicketFeedback from './components/GetTicketFeedback';
 import GetTicketHero from './components/GetTicketHero';
 import ServiceOptionsGrid from './components/ServiceOptionsGrid';
@@ -11,7 +11,9 @@ import type { FeedbackType } from './types';
 
 const GetTicket: React.FC = () => {
     const routeLocation = useRouteLocation();
+    const routeInstitution = useRouteInstitution();
     const activeLocation = routeLocation ?? DEFAULT_UNILAB_LOCATION;
+    const serviceOptions = getServiceOptions(routeInstitution);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedService, setSelectedService] = useState<string | null>(null);
     const [feedback, setFeedback] = useState<string | null>(null);
@@ -73,7 +75,7 @@ const GetTicket: React.FC = () => {
                     )}
 
                     <ServiceOptionsGrid
-                        options={SERVICE_OPTIONS}
+                        options={serviceOptions}
                         isSubmitting={isSubmitting}
                         selectedService={selectedService}
                         onSelectService={handleCreateTicket}

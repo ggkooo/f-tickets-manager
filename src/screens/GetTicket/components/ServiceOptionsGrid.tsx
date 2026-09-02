@@ -1,5 +1,6 @@
 import React from 'react';
 import ActionCard from '../../../components/ui/ActionCard';
+import { getServiceColor } from '../../../constants/serviceTypeColors';
 import type { ServiceOption } from '../types';
 
 type ServiceOptionsGridProps = {
@@ -23,7 +24,7 @@ const ServiceOptionsGrid: React.FC<ServiceOptionsGridProps> = ({
                         icon={service.icon}
                         title={service.title}
                         subtitle={isSubmitting && selectedService === service.title ? 'Enviando solicitação...' : service.subtitle}
-                        variant={service.variant}
+                        variant={getServiceColor(service.title)}
                         badges={service.badges}
                         onClick={() => onSelectService(service.title)}
                     />

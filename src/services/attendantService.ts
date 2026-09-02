@@ -1,5 +1,5 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
-import type { UnilabLocation } from '../locations';
+import type { LocationSlug } from '../locations';
 import { withLocationQuery } from '../locations';
 import type { ApiTicket, Ticket } from '../screens/Attendent/types';
 
@@ -87,7 +87,7 @@ const request = async (path: string, init: RequestInit = {}) => {
     }
 };
 
-export const fetchWaitingTickets = async (location: UnilabLocation) => {
+export const fetchWaitingTickets = async (location: LocationSlug) => {
     const response = await request(withLocationQuery(apiConfig.ticketsPath, location), {
         method: 'GET',
         headers: {

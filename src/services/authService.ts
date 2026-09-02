@@ -1,5 +1,5 @@
 import { type AuthSessionData } from '../auth/session';
-import type { UnilabLocation } from '../locations';
+import type { LocationSlug } from '../locations';
 import { apiConfig, buildApiUrl } from './apiConfig';
 
 const LOGIN_PATH = '/login';
@@ -9,7 +9,7 @@ const TIMEOUT_ERROR_MESSAGE = 'A requisição demorou demais. Tente novamente.';
 type LoginInput = {
     login: string;
     password: string;
-    location: UnilabLocation;
+    location: LocationSlug;
 };
 
 type LoginApiResponse = {
