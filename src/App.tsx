@@ -9,6 +9,7 @@ import Admin from './screens/Admin';
 import Tv from './screens/TV';
 import LocationRouteGuard from './locations/LocationRouteGuard';
 import {
+  DEFAULT_CRE_LOCATION,
   DEFAULT_UNILAB_LOCATION,
   buildLocationAdminPath,
   buildLocationAttendantPath,
@@ -69,6 +70,7 @@ function App() {
         <Route path="/login" element={<Navigate to={buildLocationLoginPath(DEFAULT_UNILAB_LOCATION)} replace />} />
         <Route path="/attendent" element={<Navigate to={buildLocationAttendantPath(DEFAULT_UNILAB_LOCATION)} replace />} />
         <Route path="/admin" element={<Navigate to={buildLocationAdminPath(DEFAULT_UNILAB_LOCATION)} replace />} />
+        <Route path="/cre" element={<Navigate to={buildLocationHomePath(DEFAULT_CRE_LOCATION)} replace />} />
         <Route
           path="/unilab/:location"
           element={(
@@ -105,6 +107,50 @@ function App() {
         />
         <Route
           path="/unilab/:location/admin"
+          element={(
+            <LocationRouteGuard>
+              <ProtectedRoute requireAdmin>
+                <Admin />
+              </ProtectedRoute>
+            </LocationRouteGuard>
+          )}
+        />
+        <Route
+          path="/cre/:location"
+          element={(
+            <LocationRouteGuard>
+              <GetTicket />
+            </LocationRouteGuard>
+          )}
+        />
+        <Route
+          path="/cre/:location/tv"
+          element={(
+            <LocationRouteGuard>
+              <Tv />
+            </LocationRouteGuard>
+          )}
+        />
+        <Route
+          path="/cre/:location/login"
+          element={(
+            <LocationRouteGuard>
+              <Login />
+            </LocationRouteGuard>
+          )}
+        />
+        <Route
+          path="/cre/:location/attendent"
+          element={(
+            <LocationRouteGuard>
+              <ProtectedRoute>
+                <Attendant />
+              </ProtectedRoute>
+            </LocationRouteGuard>
+          )}
+        />
+        <Route
+          path="/cre/:location/admin"
           element={(
             <LocationRouteGuard>
               <ProtectedRoute requireAdmin>
