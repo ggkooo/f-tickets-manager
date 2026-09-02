@@ -120,7 +120,11 @@ const VideoManagementCard: React.FC<VideoManagementCardProps> = ({
 
                 <div>
                     <h3 className="mb-2 text-lg font-bold text-slate-900">Adicionar link</h3>
-                    <p className="mb-3 text-sm text-slate-500">Link do YouTube ou outro link de vídeo.</p>
+                    <p className="mb-3 text-sm text-slate-500">
+                        Link do YouTube, um link direto de arquivo de vídeo (.mp4) ou uma página que permita ser
+                        incorporada em outro site. Páginas comuns costumam bloquear isso — se não carregar na TV,
+                        prefira o link direto do vídeo ou envie o arquivo ao lado.
+                    </p>
                     <form onSubmit={(e) => void onAddLink(e)} className="flex flex-col gap-3 sm:flex-row">
                         <input
                             type="url"
