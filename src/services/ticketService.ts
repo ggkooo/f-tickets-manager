@@ -1,9 +1,9 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
-import type { UnilabLocation } from '../locations';
+import type { LocationSlug } from '../locations';
 
 type CreateTicketInput = {
     serviceType: string;
-    location: UnilabLocation;
+    location: LocationSlug;
 };
 
 type ApiErrorBody = {
