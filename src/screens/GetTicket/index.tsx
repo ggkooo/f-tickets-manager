@@ -62,12 +62,16 @@ const GetTicket: React.FC = () => {
     };
 
     return (
-        <Layout contentClassName="mx-auto flex w-full max-w-[1180px] flex-grow flex-col justify-center px-4 py-3 sm:w-[96%] sm:px-5 sm:py-4 md:px-5 md:py-4 lg:w-[94%] lg:px-0 lg:py-5 xl:py-8" showHeader={false}>
-            <section className="relative w-full overflow-hidden">
+        <Layout
+            contentClassName="mx-auto flex w-full max-w-[1180px] flex-grow flex-col px-4 py-[clamp(0.5rem,1.6vh,1.25rem)] sm:w-[96%] sm:px-5 md:px-5 lg:w-[94%] lg:px-0"
+            showHeader={false}
+            fitViewport
+        >
+            <section className="relative flex w-full min-h-0 flex-1 flex-col overflow-hidden">
                 <div className="pointer-events-none absolute -left-10 -top-8 h-40 w-40 rounded-full bg-blue-100/60 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-12 right-0 h-44 w-44 rounded-full bg-emerald-100/60 blur-3xl" />
 
-                <div className="relative rounded-[2rem] border border-white/80 bg-gradient-to-br from-white via-white to-slate-100/80 p-4 shadow-[0_20px_45px_-30px_rgba(15,23,42,0.35)] sm:p-5 md:p-6 lg:p-8">
+                <div className="relative flex min-h-0 flex-1 flex-col rounded-[2rem] border border-white/80 bg-gradient-to-br from-white via-white to-slate-100/80 p-[clamp(0.85rem,2.5vh,2rem)] shadow-[0_20px_45px_-30px_rgba(15,23,42,0.35)]">
                     <GetTicketHero />
 
                     {feedback && feedbackType && (
