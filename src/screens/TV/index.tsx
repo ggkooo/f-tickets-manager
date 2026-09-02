@@ -17,7 +17,7 @@ const Tv = () => {
 
     const { playAlert } = useTicketAlertSound();
     const { tickets, isLoadingTickets, ticketsError } = useTvTickets(activeLocation, playAlert);
-    const { mediaItems, mediaError, currentMediaIndex, advanceToNextMedia } = useTvMedia();
+    const { mediaItems, mediaError, currentMediaIndex, reloadNonce, advanceToNextMedia } = useTvMedia(activeLocation);
 
     useSilentVideoPlayback(videoRef, [currentMediaIndex, mediaItems]);
 
@@ -45,6 +45,7 @@ const Tv = () => {
                         error={mediaError}
                         videoRef={videoRef}
                         onVideoEnded={advanceToNextMedia}
+                        reloadNonce={reloadNonce}
                     />
                 </div>
             </main>

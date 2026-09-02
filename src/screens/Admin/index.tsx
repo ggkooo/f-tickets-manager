@@ -9,11 +9,12 @@ import ReportSection from './components/ReportSection';
 import SummaryCards from './components/SummaryCards';
 import PrinterSettingsCard from './components/PrinterSettingsCard';
 import UsersSection from './components/UsersSection';
+import VideoManagementCard from './components/VideoManagementCard';
 import { useAdminUsers } from './hooks/useAdminUsers';
-import { useAdminVideos } from './hooks/useAdminVideos';
 import { useAttendanceReport } from './hooks/useAttendanceReport';
 import { useConfirmDialog } from './hooks/useConfirmDialog';
 import { usePrinterSettings } from './hooks/usePrinterSettings';
+import { useVideoManagement } from './hooks/useVideoManagement';
 import { formatLoginLabel } from './utils';
 
 const Admin: React.FC = () => {
@@ -26,7 +27,7 @@ const Admin: React.FC = () => {
     const adminUsers = useAdminUsers(accessToken, isSuperAdmin);
     const printerSettings = usePrinterSettings(accessToken, isSuperAdmin);
     const attendanceReport = useAttendanceReport(accessToken, currentUser?.location);
-    const adminVideos = useAdminVideos(accessToken, isSuperAdmin);
+    const videoManagement = useVideoManagement(accessToken, isSuperAdmin);
     const confirmDialog = useConfirmDialog();
 
     const handleDeleteUser = (userId: number) => {
@@ -132,10 +133,28 @@ const Admin: React.FC = () => {
                         ) : null}
 
                         {isSuperAdmin ? (
+                            <VideoManagementCard
+                                videos={videoManagement.videos}
+                                linkUrl={videoManagement.linkUrl}
+                                isLoadingVideos={videoManagement.isLoadingVideos}
+                                isUploadingVideo={videoManagement.isUploadingVideo}
+                                isAddingLink={videoManagement.isAddingLink}
+                                deletingVideoId={videoManagement.deletingVideoId}
+                                errorMessage={videoManagement.videoError}
+                                successMessage={videoManagement.videoSuccess}
+                                onLinkUrlChange={videoManagement.setLinkUrl}
+                                onUploadVideo={videoManagement.handleUploadVideo}
+                                onAddLink={videoManagement.handleAddLink}
+                                onDeleteVideo={videoManagement.handleDeleteVideo}
+                                onReload={videoManagement.refreshVideos}
+                            />
+                        ) : null}
+
+                        {isSuperAdmin ? (
                             <SummaryCards
                                 usersCount={adminUsers.users.length}
                                 adminsCount={adminUsers.users.filter((item) => item.is_admin).length}
-                                videosCount={adminVideos.videos.length}
+                                videosCount={videoManagement.videos.length}
                             />
                         ) : null}
                     </div>

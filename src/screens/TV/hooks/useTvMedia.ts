@@ -1,21 +1,33 @@
 import { useEffect, useState } from 'react';
+import type { LocationSlug } from '../../../locations';
 import { fetchTvMedia } from '../../../services/tvService';
 import type { TvMedia } from '../types';
 import { getMediaSignature } from '../utils';
 
 const MEDIA_REFRESH_INTERVAL_MS = 30000;
-const IMAGE_DISPLAY_DURATION_MS = 10000;
+// Iframe-based media ('youtube' and 'embed') doesn't expose a DOM "ended"
+// event the way a plain <video> does, so those advance on a fixed timer
+// instead.
+const IFRAME_DISPLAY_DURATION_MS = 60000;
+
+const isIframeMedia = (media: TvMedia | undefined): boolean =>
+    media?.kind === 'youtube' || media?.kind === 'embed';
 
 /**
- * Owns the TV screen's background media playlist (videos/images fetched
- * from the server): polling for new/removed files and auto-advancing past
- * images after a fixed duration (videos advance on their own `ended` event,
- * handled by the caller via `advanceToNextMedia`).
+ * Owns the TV screen's video playlist for this location: polling for
+ * uploads/links added or removed in the admin panel, and auto-advancing.
+ * Plain videos advance on their own `ended` event (via `advanceToNextMedia`,
+ * called by the caller). Iframe media advances on a fixed timer here since
+ * there's no `ended` event to listen for: with more than one item it moves
+ * to the next one, otherwise it forces the iframe to reload (`reloadNonce`)
+ * so a single non-YouTube embed still "restarts" instead of going stale —
+ * YouTube already loops on its own via the `loop`/`playlist` embed params.
  */
-export const useTvMedia = () => {
+export const useTvMedia = (location: LocationSlug) => {
     const [mediaItems, setMediaItems] = useState<TvMedia[]>([]);
     const [mediaError, setMediaError] = useState<string | null>(null);
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+    const [reloadNonce, setReloadNonce] = useState(0);
 
     const advanceToNextMedia = () => {
         setCurrentMediaIndex((previousIndex) => {
@@ -29,7 +41,7 @@ export const useTvMedia = () => {
 
     const refreshMedia = async () => {
         try {
-            const nextMedia = await fetchTvMedia();
+            const nextMedia = await fetchTvMedia(location);
 
             setMediaError(null);
             setMediaItems((previousMedia) => {
@@ -62,18 +74,28 @@ export const useTvMedia = () => {
         }, MEDIA_REFRESH_INTERVAL_MS);
 
         return () => window.clearInterval(interval);
-    }, []);
+    }, [location]);
 
     useEffect(() => {
         const currentMedia = mediaItems[currentMediaIndex];
 
-        if (currentMedia?.type !== 'image' || mediaItems.length <= 1) {
+        if (!isIframeMedia(currentMedia)) {
+            return;
+        }
+
+        // A single YouTube item already loops itself via its embed params;
+        // nothing to do here for it.
+        if (mediaItems.length <= 1 && currentMedia?.kind === 'youtube') {
             return;
         }
 
         const timeoutId = window.setTimeout(() => {
-            advanceToNextMedia();
-        }, IMAGE_DISPLAY_DURATION_MS);
+            if (mediaItems.length > 1) {
+                advanceToNextMedia();
+            } else {
+                setReloadNonce((nonce) => nonce + 1);
+            }
+        }, IFRAME_DISPLAY_DURATION_MS);
 
         return () => window.clearTimeout(timeoutId);
     }, [currentMediaIndex, mediaItems]);
@@ -82,6 +104,7 @@ export const useTvMedia = () => {
         mediaItems,
         mediaError,
         currentMediaIndex,
+        reloadNonce,
         advanceToNextMedia,
     };
 };
