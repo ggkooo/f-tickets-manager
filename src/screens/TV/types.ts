@@ -8,11 +8,12 @@ export interface TvTicket {
     calledAt?: Date;
 }
 
-export type TvMediaType = 'video' | 'image';
+// 'video' plays directly (an uploaded file or a direct video link);
+// 'youtube' renders as an embedded iframe.
+export type TvMediaKind = 'video' | 'youtube';
 
 export interface TvMedia {
-    filename: string;
+    id: number;
+    kind: TvMediaKind;
     url: string;
-    type: TvMediaType;
-    createdAt?: string;
 }
