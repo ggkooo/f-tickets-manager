@@ -1,7 +1,8 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
 import type { LocationSlug } from '../locations';
 import { withLocationQuery } from '../locations';
-import type { TvMedia, TvMediaType, TvTicket } from '../screens/TV/types';
+import type { TvMedia, TvTicket } from '../screens/TV/types';
+import { getYouTubeEmbedUrl } from '../screens/TV/utils';
 
 interface ApiTvTicket {
     id: number;
@@ -13,6 +14,13 @@ interface ApiTvTicket {
     called_at?: string;
 }
 
+interface ApiVideo {
+    id: number;
+    type: 'upload' | 'link';
+    filename: string | null;
+    url: string | null;
+}
+
 type ApiErrorBody = {
     message?: string;
     error?: string;
@@ -21,6 +29,7 @@ type ApiErrorBody = {
 const DEFAULT_API_KEY = 'e15e7aaff2ec79683370eef2fdd01ec0c2ffe94706e73cca7062e026617cc2fb';
 const API_KEY = import.meta.env.VITE_API_KEY ?? apiConfig.apiKey ?? DEFAULT_API_KEY;
 const RECENTLY_CALLED_PATH = import.meta.env.VITE_TV_RECENTLY_CALLED_PATH ?? `${apiConfig.ticketsPath}/recently-called`;
+const VIDEOS_PATH = import.meta.env.VITE_VIDEOS_PATH ?? '/videos';
 
 const createTimeoutController = (timeoutMs: number) => {
     const controller = new AbortController();
@@ -97,14 +106,21 @@ const mapTicket = (ticket: ApiTvTicket): TvTicket => ({
     calledAt: ticket.called_at ? new Date(ticket.called_at) : undefined,
 });
 
-const buildPublicAssetUrl = (path: string) => path.replace('/public', '');
+const mapVideo = (video: ApiVideo): TvMedia | null => {
+    if (!video.url) {
+        return null;
+    }
 
-const buildMediaEntry = (path: string, type: TvMediaType): TvMedia => ({
-    filename: path.split('/').pop() || '',
-    url: buildPublicAssetUrl(path),
-    type,
-    createdAt: new Date().toISOString(),
-});
+    if (video.type === 'link') {
+        const embedUrl = getYouTubeEmbedUrl(video.url);
+
+        if (embedUrl) {
+            return { id: video.id, kind: 'youtube', url: embedUrl };
+        }
+    }
+
+    return { id: video.id, kind: 'video', url: video.url };
+};
 
 export const fetchRecentlyCalledTickets = async (location: LocationSlug) => {
     const response = await request(
@@ -126,17 +142,27 @@ export const fetchRecentlyCalledTickets = async (location: LocationSlug) => {
     return (data as ApiTvTicket[]).map(mapTicket);
 };
 
-export const fetchTvMedia = async (): Promise<TvMedia[]> => {
+export const fetchTvMedia = async (location: LocationSlug): Promise<TvMedia[]> => {
     try {
-        const videoModules = import.meta.glob('/public/assets/video/**/*.{mp4,webm,ogg,mov,m4v}', { eager: false });
-        const imageModules = import.meta.glob('/public/assets/img/tv/**/*.{png,jpg,jpeg,webp,gif}', { eager: false });
+        const response = await request(
+            withLocationQuery(VIDEOS_PATH, location),
+            {
+                method: 'GET',
+                headers: {
+                    'X-UNILAB-LOCATION': location,
+                },
+            },
+            'Não foi possível carregar as mídias da TV.',
+        );
+        const data: unknown = await response.json();
 
-        const mediaItems = [
-            ...Object.keys(videoModules).map((path) => buildMediaEntry(path, 'video')),
-            ...Object.keys(imageModules).map((path) => buildMediaEntry(path, 'image')),
-        ];
+        if (!Array.isArray(data)) {
+            return [];
+        }
 
-        return mediaItems.sort((firstItem, secondItem) => firstItem.filename.localeCompare(secondItem.filename));
+        return (data as ApiVideo[])
+            .map(mapVideo)
+            .filter((media): media is TvMedia => media !== null);
     } catch {
         return [];
     }
