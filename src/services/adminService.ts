@@ -1,4 +1,5 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
+import { handleExpiredSession } from '../auth/sessionExpiry';
 
 export interface ApiUser {
     id: number;
@@ -211,6 +212,11 @@ const request = async (url: string, init: RequestInit, fallbackMessage: string) 
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                handleExpiredSession();
+                throw new Error('Sua sessão expirou. Faça login novamente.');
+            }
+
             throw new Error(await getErrorMessage(response, fallbackMessage));
         }
 
