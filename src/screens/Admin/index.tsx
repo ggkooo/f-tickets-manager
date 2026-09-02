@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { clearAuthSession, getAccessToken, getAuthSession } from '../../auth/session';
-import { buildLocationLoginPath } from '../../locations';
+import { buildLocationLoginPath, resolveInstitution } from '../../locations';
 import {
     createPrinterSettings,
     deleteAdminUser,
@@ -490,8 +490,9 @@ const Admin: React.FC = () => {
 
         try {
             const reportData = await fetchAttendanceReport(startDate, endDate, accessToken);
+            const institutionLabel = resolveInstitution(currentUser?.location) === 'cre' ? 'CRE' : 'UNILAB';
 
-            createAttendanceReportPdf(reportData);
+            createAttendanceReportPdf(reportData, institutionLabel);
             setReportSuccess('PDF gerado com sucesso.');
         } catch (error) {
             setReportError(error instanceof Error ? error.message : 'Falha ao gerar PDF.');
