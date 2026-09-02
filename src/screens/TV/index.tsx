@@ -32,7 +32,7 @@ const Tv = () => {
                 <Header />
             </div>
 
-            <main className="flex-1 min-h-0 overflow-hidden w-full grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] items-stretch justify-center p-3 sm:p-4 lg:p-4 xl:p-6 2xl:p-8 gap-3 lg:gap-4 xl:gap-6 2xl:gap-8 z-10">
+            <main className="flex-1 min-h-0 overflow-hidden w-full grid grid-cols-1 sm:grid-cols-[1.2fr_1fr] items-stretch justify-center p-3 sm:p-4 lg:p-4 xl:p-6 2xl:p-8 gap-3 lg:gap-4 xl:gap-6 2xl:gap-8 z-10">
                 <div className="min-h-0 min-w-0 overflow-hidden flex flex-col gap-3 lg:gap-4 xl:gap-6 2xl:gap-8">
                     <CurrentTicketPanel ticket={tickets[0] ?? null} isLoading={isLoadingTickets} error={ticketsError} />
                 </div>
