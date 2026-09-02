@@ -2,7 +2,7 @@ import { apiConfig, buildApiUrl } from './apiConfig';
 import type { LocationSlug } from '../locations';
 import { withLocationQuery } from '../locations';
 import type { TvMedia, TvTicket } from '../screens/TV/types';
-import { getYouTubeEmbedUrl } from '../screens/TV/utils';
+import { getYouTubeEmbedUrl, isDirectVideoFileUrl } from '../screens/TV/utils';
 
 interface ApiTvTicket {
     id: number;
@@ -111,15 +111,23 @@ const mapVideo = (video: ApiVideo): TvMedia | null => {
         return null;
     }
 
-    if (video.type === 'link') {
-        const embedUrl = getYouTubeEmbedUrl(video.url);
-
-        if (embedUrl) {
-            return { id: video.id, kind: 'youtube', url: embedUrl };
-        }
+    if (video.type === 'upload') {
+        return { id: video.id, kind: 'video', url: video.url };
     }
 
-    return { id: video.id, kind: 'video', url: video.url };
+    const embedUrl = getYouTubeEmbedUrl(video.url);
+
+    if (embedUrl) {
+        return { id: video.id, kind: 'youtube', url: embedUrl };
+    }
+
+    if (isDirectVideoFileUrl(video.url)) {
+        return { id: video.id, kind: 'video', url: video.url };
+    }
+
+    // Not YouTube and not a direct video file — an arbitrary webpage link,
+    // rendered as a plain iframe since we can't play it as a <video>.
+    return { id: video.id, kind: 'embed', url: video.url };
 };
 
 export const fetchRecentlyCalledTickets = async (location: LocationSlug) => {
