@@ -42,3 +42,18 @@ svg {
   display: block;
   max-width: 100%;
 }
+
+/*
+ * Google's Material Icons stylesheet is loaded as a plain <link>, outside
+ * any CSS cascade layer. Tailwind's own utilities (flex, items-center,
+ * justify-center, text-*) are compiled into @layer utilities, and an
+ * unlayered rule always wins over a layered one regardless of specificity
+ * or source order — so Google's `display: inline-block; font-size: 24px;`
+ * was silently beating our layout/size utilities on every icon. This rule
+ * is deliberately unlayered too, so it competes on equal footing and wins.
+ */
+.material-icons-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
