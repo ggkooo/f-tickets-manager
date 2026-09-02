@@ -94,8 +94,8 @@ const VideoPlayerPanel = ({ media, hasMultipleItems, error, videoRef, onVideoEnd
                         frameBorder={0}
                     />
                 ) : (
-                    <div className="w-full h-full min-h-[140px] max-h-[30vh] lg:max-h-[34vh] xl:max-h-[42vh] 2xl:max-h-[46vh] rounded-lg lg:rounded-xl bg-[#003B71] flex items-center justify-center">
-                        <img src={unijuiLogo} alt="Unijuí" className="w-1/2 max-w-[220px] object-contain opacity-90" />
+                    <div className="w-full h-full min-h-[140px] max-h-[30vh] lg:max-h-[34vh] xl:max-h-[42vh] 2xl:max-h-[46vh] rounded-lg lg:rounded-xl bg-white flex items-center justify-center">
+                        <img src={unijuiLogo} alt="Unijuí" className="w-1/3 max-w-[140px] object-contain opacity-90" />
                     </div>
                 )}
             </div>

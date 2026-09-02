@@ -79,30 +79,30 @@ const ActionCard: React.FC<ActionCardProps> = ({ icon, title, subtitle, variant,
     return (
         <button
             onClick={onClick}
-            className={`group relative flex h-full min-h-[10rem] w-full flex-col rounded-3xl border p-3 text-left transition-all duration-300 hover:-translate-y-1 active:translate-y-0 focus-visible:outline-none focus-visible:ring-4 sm:min-h-[11rem] sm:p-3.5 md:min-h-[11.5rem] lg:min-h-[12rem] lg:p-4 xl:min-h-[14rem] xl:p-5 2xl:min-h-[16rem] ${styles.bg} ${styles.card} ${styles.ring}`}
+            className={`group relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-3xl border p-[clamp(0.65rem,2.2vh,1.25rem)] text-left transition-all duration-300 hover:-translate-y-1 active:translate-y-0 focus-visible:outline-none focus-visible:ring-4 ${styles.bg} ${styles.card} ${styles.ring}`}
         >
-            <div className="flex flex-1 flex-col">
-                <div className="mb-2 flex items-start justify-between gap-2 sm:mb-3 sm:gap-3 lg:mb-3 lg:gap-4">
-                    <div className="flex items-center gap-3">
-                        <span className={`material-icons-outlined flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl !text-2xl sm:h-12 sm:w-12 sm:!text-3xl lg:h-11 lg:w-11 xl:h-14 xl:w-14 xl:!text-3xl 2xl:h-16 2xl:w-16 2xl:!text-4xl ${styles.icon}`}>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <div className="mb-[clamp(0.25rem,1.2vh,0.75rem)] flex min-h-0 shrink-0 items-start justify-between gap-2">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <span className={`material-icons-outlined flex h-[clamp(1.75rem,6vh,3.5rem)] w-[clamp(1.75rem,6vh,3.5rem)] shrink-0 items-center justify-center rounded-2xl !text-[clamp(1rem,3vh,1.75rem)] ${styles.icon}`}>
                             {icon}
                         </span>
 
                         {badges && badges.length > 0 && (
-                            <div className="flex flex-wrap items-center content-center gap-2">
+                            <div className="flex flex-wrap items-center content-center gap-1.5">
                                 {badges.map((badge) => (
                                     <span
                                         key={badge.label}
-                                        className="inline-flex items-center gap-1 rounded-full border border-orange-200 bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700"
+                                        className="inline-flex items-center gap-1 rounded-full border border-orange-200 bg-orange-50 px-[clamp(0.4rem,1vh,0.65rem)] py-[clamp(0.1rem,0.4vh,0.25rem)] text-[clamp(0.6rem,1.4vh,0.75rem)] font-semibold text-orange-700"
                                     >
                                         {badge.imageSrc ? (
                                             <img
                                                 src={badge.imageSrc}
                                                 alt={badge.label}
-                                                className="h-4 w-4 object-contain"
+                                                className="h-[clamp(0.7rem,1.6vh,1rem)] w-[clamp(0.7rem,1.6vh,1rem)] object-contain"
                                             />
                                         ) : (
-                                            <span className="material-icons-outlined !text-sm leading-none">{badge.icon}</span>
+                                            <span className="material-icons-outlined !text-[clamp(0.7rem,1.6vh,1rem)] leading-none">{badge.icon}</span>
                                         )}
                                         <span>{badge.label}</span>
                                     </span>
@@ -110,16 +110,16 @@ const ActionCard: React.FC<ActionCardProps> = ({ icon, title, subtitle, variant,
                             </div>
                         )}
                     </div>
-                    <span className={`material-icons-outlined translate-x-0 !text-3xl transition-transform duration-300 group-hover:translate-x-1 ${styles.arrow}`}>
+                    <span className={`material-icons-outlined translate-x-0 shrink-0 !text-[clamp(1.1rem,3.2vh,1.75rem)] transition-transform duration-300 group-hover:translate-x-1 ${styles.arrow}`}>
                         arrow_forward
                     </span>
                 </div>
-                <span className="text-[1.2rem] font-semibold leading-tight text-slate-900 sm:text-[1.35rem] lg:text-[1.3rem] xl:text-[1.55rem] 2xl:text-[1.7rem]">{title}</span>
+                <span className="min-h-0 shrink-0 text-[clamp(0.95rem,2.6vh,1.7rem)] font-semibold leading-tight text-slate-900">{title}</span>
                 {subtitle && (
-                    <span className="text-[0.8rem] font-medium leading-relaxed text-slate-500 sm:text-[0.875rem] lg:text-[0.84rem] xl:text-[0.92rem] 2xl:text-base">{subtitle}</span>
+                    <span className="line-clamp-2 min-h-0 text-[clamp(0.7rem,1.8vh,1rem)] font-medium leading-relaxed text-slate-500">{subtitle}</span>
                 )}
             </div>
-            <span className="mt-2 text-xs font-semibold uppercase tracking-wide text-slate-400 sm:text-xs lg:mt-2 xl:mt-3 2xl:mt-4">Toque para continuar</span>
+            <span className="mt-[clamp(0.25rem,1vh,0.75rem)] shrink-0 text-[clamp(0.6rem,1.4vh,0.75rem)] font-semibold uppercase tracking-wide text-slate-400">Toque para continuar</span>
         </button>
     );
 };

@@ -2,11 +2,11 @@ import React from 'react';
 
 const GetTicketHero: React.FC = () => {
     return (
-        <div className="mb-3 flex flex-col gap-2 md:mb-4 lg:mb-4 xl:mb-6 2xl:mb-8">
-            <h1 className="text-2xl font-semibold leading-tight text-slate-900 sm:text-3xl md:text-[2rem] lg:text-[2.2rem] xl:text-[2.6rem] 2xl:text-5xl">
+        <div className="mb-[clamp(0.5rem,2vh,2rem)] flex shrink-0 flex-col gap-[clamp(0.15rem,0.6vh,0.5rem)]">
+            <h1 className="text-[clamp(1.3rem,4.5vh,3rem)] font-semibold leading-tight text-slate-900">
                 Retire aqui sua senha
             </h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-slate-500 sm:text-base lg:text-lg">
+            <p className="max-w-2xl text-[clamp(0.8rem,2vh,1.125rem)] leading-relaxed text-slate-500">
                 Selecione uma opção abaixo para iniciar seu atendimento de forma rápida.
             </p>
         </div>
