@@ -1,13 +1,18 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
-import GetTicket from './screens/GetTicket';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import Attendant from './screens/Attendent';
-import Login from './screens/Login';
-import Admin from './screens/Admin';
-import Tv from './screens/TV';
 import LocationRouteGuard from './locations/LocationRouteGuard';
+
+// Each screen is its own bundle chunk, loaded only when its route is visited
+// (the totem is only ever showing one screen at a time, so there's no
+// reason to ship the admin panel's PDF/report code, for example, to the
+// public ticket kiosk).
+const GetTicket = lazy(() => import('./screens/GetTicket'));
+const Attendant = lazy(() => import('./screens/Attendent'));
+const Login = lazy(() => import('./screens/Login'));
+const Admin = lazy(() => import('./screens/Admin'));
+const Tv = lazy(() => import('./screens/TV'));
 import {
   DEFAULT_CRE_LOCATION,
   DEFAULT_UNILAB_LOCATION,
@@ -64,6 +69,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Suspense fallback={null}>
       <Routes>
         <Route path="/" element={<Navigate to={buildLocationHomePath(DEFAULT_UNILAB_LOCATION)} replace />} />
         <Route path="/tv" element={<Navigate to={buildLocationTvPath(DEFAULT_UNILAB_LOCATION)} replace />} />
@@ -161,6 +167,7 @@ function App() {
         />
         <Route path="*" element={<Navigate to={buildLocationHomePath(DEFAULT_UNILAB_LOCATION)} replace />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
