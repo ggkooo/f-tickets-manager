@@ -42,7 +42,7 @@ const formatOutcomeLabel = (value: string): string => {
     return value.replace(/_/g, ' ');
 };
 
-export const createAttendanceReportPdf = (report: AttendanceReportResponse): void => {
+export const createAttendanceReportPdf = (report: AttendanceReportResponse, institutionLabel = 'UNILAB'): void => {
     const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -293,7 +293,7 @@ export const createAttendanceReportPdf = (report: AttendanceReportResponse): voi
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(9);
     pdf.setTextColor(100, 116, 139);
-    pdf.text('UNILAB Totem Relatório administrativo gerado automaticamente', margin, footerY);
+    pdf.text(`${institutionLabel} Totem Relatório administrativo gerado automaticamente`, margin, footerY);
 
     pdf.save(`relatorio-atendimentos-${report.period.start_date}-${report.period.end_date}.pdf`);
 };
