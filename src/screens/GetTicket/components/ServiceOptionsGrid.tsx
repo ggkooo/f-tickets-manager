@@ -17,9 +17,9 @@ const ServiceOptionsGrid: React.FC<ServiceOptionsGridProps> = ({
     onSelectService,
 }) => {
     return (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:gap-5">
+        <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-[clamp(0.5rem,1.6vh,1.25rem)] sm:grid-cols-2">
             {options.map((service) => (
-                <div key={service.title} className={service.fullWidth ? 'h-full sm:col-span-2' : 'h-full'}>
+                <div key={service.title} className={service.fullWidth ? 'min-h-0 h-full sm:col-span-2' : 'min-h-0 h-full'}>
                     <ActionCard
                         icon={service.icon}
                         title={service.title}
