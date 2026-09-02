@@ -1,11 +1,10 @@
 import React from 'react';
-
-type VariantType = 'primary' | 'success' | 'warning';
+import type { ServiceColor } from '../../../constants/serviceTypeColors';
 
 interface ActionCardProps {
     icon: string;
     title: string;
-    variant: VariantType;
+    variant: ServiceColor;
     subtitle?: string;
     badges?: Array<{
         icon?: string;
@@ -15,27 +14,62 @@ interface ActionCardProps {
     onClick?: () => void;
 }
 
-const variantStyles: Record<VariantType, { icon: string; ring: string; arrow: string; card: string; bg: string }> = {
-    primary: {
+const variantStyles: Record<ServiceColor, { icon: string; ring: string; arrow: string; card: string; bg: string }> = {
+    blue: {
         icon: 'bg-blue-100 text-blue-700',
         ring: 'focus-visible:ring-blue-300',
         arrow: 'text-blue-700',
         card: 'border-blue-400/90 hover:border-blue-400 neon-pulse-blue hover:shadow-[0_0_0_1px_rgba(59,130,246,0.72),0_0_36px_rgba(59,130,246,0.66)]',
         bg: 'bg-blue-50/70',
     },
-    success: {
+    amber: {
         icon: 'bg-amber-100 text-amber-700',
         ring: 'focus-visible:ring-amber-300',
         arrow: 'text-amber-700',
         card: 'border-amber-400/90 hover:border-amber-400 neon-pulse-amber hover:shadow-[0_0_0_1px_rgba(251,191,36,0.72),0_0_36px_rgba(251,191,36,0.66)]',
         bg: 'bg-amber-50/70',
     },
-    warning: {
+    red: {
         icon: 'bg-red-100 text-red-700',
         ring: 'focus-visible:ring-red-300',
         arrow: 'text-red-700',
         card: 'border-red-400/90 hover:border-red-400 neon-pulse-red hover:shadow-[0_0_0_1px_rgba(248,113,113,0.72),0_0_36px_rgba(248,113,113,0.66)]',
         bg: 'bg-red-50/70',
+    },
+    indigo: {
+        icon: 'bg-indigo-100 text-indigo-700',
+        ring: 'focus-visible:ring-indigo-300',
+        arrow: 'text-indigo-700',
+        card: 'border-indigo-400/90 hover:border-indigo-400 neon-pulse-indigo hover:shadow-[0_0_0_1px_rgba(99,102,241,0.72),0_0_36px_rgba(99,102,241,0.66)]',
+        bg: 'bg-indigo-50/70',
+    },
+    emerald: {
+        icon: 'bg-emerald-100 text-emerald-700',
+        ring: 'focus-visible:ring-emerald-300',
+        arrow: 'text-emerald-700',
+        card: 'border-emerald-400/90 hover:border-emerald-400 neon-pulse-emerald hover:shadow-[0_0_0_1px_rgba(16,185,129,0.72),0_0_36px_rgba(16,185,129,0.66)]',
+        bg: 'bg-emerald-50/70',
+    },
+    rose: {
+        icon: 'bg-rose-100 text-rose-700',
+        ring: 'focus-visible:ring-rose-300',
+        arrow: 'text-rose-700',
+        card: 'border-rose-400/90 hover:border-rose-400 neon-pulse-rose hover:shadow-[0_0_0_1px_rgba(244,63,94,0.72),0_0_36px_rgba(244,63,94,0.66)]',
+        bg: 'bg-rose-50/70',
+    },
+    cyan: {
+        icon: 'bg-cyan-100 text-cyan-700',
+        ring: 'focus-visible:ring-cyan-300',
+        arrow: 'text-cyan-700',
+        card: 'border-cyan-400/90 hover:border-cyan-400 neon-pulse-cyan hover:shadow-[0_0_0_1px_rgba(6,182,212,0.72),0_0_36px_rgba(6,182,212,0.66)]',
+        bg: 'bg-cyan-50/70',
+    },
+    violet: {
+        icon: 'bg-violet-100 text-violet-700',
+        ring: 'focus-visible:ring-violet-300',
+        arrow: 'text-violet-700',
+        card: 'border-violet-400/90 hover:border-violet-400 neon-pulse-violet hover:shadow-[0_0_0_1px_rgba(139,92,246,0.72),0_0_36px_rgba(139,92,246,0.66)]',
+        bg: 'bg-violet-50/70',
     },
 };
 
