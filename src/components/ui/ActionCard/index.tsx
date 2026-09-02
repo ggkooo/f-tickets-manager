@@ -84,7 +84,7 @@ const ActionCard: React.FC<ActionCardProps> = ({ icon, title, subtitle, variant,
             <div className="flex flex-1 flex-col">
                 <div className="mb-2 flex items-start justify-between gap-2 sm:mb-3 sm:gap-3 lg:mb-3 lg:gap-4">
                     <div className="flex items-center gap-3">
-                        <span className={`material-icons-outlined flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-2xl sm:h-12 sm:w-12 sm:text-3xl lg:h-11 lg:w-11 xl:h-14 xl:w-14 xl:text-3xl 2xl:h-16 2xl:w-16 2xl:text-4xl ${styles.icon}`}>
+                        <span className={`material-icons-outlined flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl !text-2xl sm:h-12 sm:w-12 sm:!text-3xl lg:h-11 lg:w-11 xl:h-14 xl:w-14 xl:!text-3xl 2xl:h-16 2xl:w-16 2xl:!text-4xl ${styles.icon}`}>
                             {icon}
                         </span>
 
@@ -102,7 +102,7 @@ const ActionCard: React.FC<ActionCardProps> = ({ icon, title, subtitle, variant,
                                                 className="h-4 w-4 object-contain"
                                             />
                                         ) : (
-                                            <span className="material-icons-outlined text-sm leading-none">{badge.icon}</span>
+                                            <span className="material-icons-outlined !text-sm leading-none">{badge.icon}</span>
                                         )}
                                         <span>{badge.label}</span>
                                     </span>
@@ -110,7 +110,7 @@ const ActionCard: React.FC<ActionCardProps> = ({ icon, title, subtitle, variant,
                             </div>
                         )}
                     </div>
-                    <span className={`material-icons-outlined translate-x-0 text-3xl transition-transform duration-300 group-hover:translate-x-1 ${styles.arrow}`}>
+                    <span className={`material-icons-outlined translate-x-0 !text-3xl transition-transform duration-300 group-hover:translate-x-1 ${styles.arrow}`}>
                         arrow_forward
                     </span>
                 </div>
