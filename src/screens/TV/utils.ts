@@ -56,4 +56,54 @@ export const getTicketsSignature = (tickets: TvTicket[]) =>
     tickets.map((ticket) => `${ticket.id}:${ticket.updatedAt.getTime()}:${ticket.counterName}`).join('|');
 
 export const getMediaSignature = (mediaItems: TvMedia[]) =>
-    mediaItems.map((media) => `${media.type}:${media.filename}:${media.url}:${media.createdAt ?? ''}`).join('|');
+    mediaItems.map((media) => `${media.id}:${media.kind}:${media.url}`).join('|');
+
+const YOUTUBE_HOSTNAME_PATTERN = /(?:^|\.)youtube\.com$|(?:^|\.)youtu\.be$/i;
+
+/**
+ * Converts any common YouTube URL shape (watch/shorts/youtu.be/already-embed)
+ * into an embed URL configured for silent, looping, chromeless kiosk
+ * playback. Returns null for anything that isn't a recognizable YouTube URL.
+ */
+export const getYouTubeEmbedUrl = (url: string): string | null => {
+    let parsed: URL;
+
+    try {
+        parsed = new URL(url);
+    } catch {
+        return null;
+    }
+
+    if (!YOUTUBE_HOSTNAME_PATTERN.test(parsed.hostname)) {
+        return null;
+    }
+
+    let videoId: string | null = null;
+
+    if (/(?:^|\.)youtu\.be$/i.test(parsed.hostname)) {
+        videoId = parsed.pathname.split('/').filter(Boolean)[0] ?? null;
+    } else if (parsed.pathname.startsWith('/watch')) {
+        videoId = parsed.searchParams.get('v');
+    } else if (parsed.pathname.startsWith('/embed/')) {
+        videoId = parsed.pathname.split('/').filter(Boolean)[1] ?? null;
+    } else if (parsed.pathname.startsWith('/shorts/')) {
+        videoId = parsed.pathname.split('/').filter(Boolean)[1] ?? null;
+    }
+
+    if (!videoId) {
+        return null;
+    }
+
+    const embedParams = new URLSearchParams({
+        autoplay: '1',
+        mute: '1',
+        controls: '0',
+        loop: '1',
+        playlist: videoId,
+        rel: '0',
+        modestbranding: '1',
+        playsinline: '1',
+    });
+
+    return `https://www.youtube.com/embed/${videoId}?${embedParams.toString()}`;
+};
