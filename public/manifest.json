@@ -8,10 +8,10 @@
   "theme_color": "#4a90e2",
   "icons": [
     {
-      "src": "assets/img/icons/android-icon-192x192.png",
-      "sizes": "192x192",
+      "src": "assets/img/icons/favicon-unijui.png",
+      "sizes": "150x137",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
