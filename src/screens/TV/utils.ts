@@ -107,3 +107,12 @@ export const getYouTubeEmbedUrl = (url: string): string | null => {
 
     return `https://www.youtube.com/embed/${videoId}?${embedParams.toString()}`;
 };
+
+const DIRECT_VIDEO_FILE_PATTERN = /\.(mp4|webm|ogg|ogv|mov|m3u8)(\?.*)?$/i;
+
+/**
+ * True for links that point straight at a video file/stream (playable in a
+ * plain <video> tag). Anything else — a YouTube link handled separately, or
+ * an arbitrary webpage link — is not.
+ */
+export const isDirectVideoFileUrl = (url: string): boolean => DIRECT_VIDEO_FILE_PATTERN.test(url);
