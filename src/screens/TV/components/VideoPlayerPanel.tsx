@@ -9,13 +9,14 @@ interface VideoPlayerPanelProps {
     error: string | null;
     videoRef: RefObject<HTMLVideoElement | null>;
     onVideoEnded: () => void;
+    reloadNonce: number;
 }
 
 type HtmlVideoWithAudioTracks = HTMLVideoElement & {
     audioTracks?: ArrayLike<{ enabled: boolean }>;
 };
 
-const VideoPlayerPanel = ({ media, hasMultipleItems, error, videoRef, onVideoEnded }: VideoPlayerPanelProps) => {
+const VideoPlayerPanel = ({ media, hasMultipleItems, error, videoRef, onVideoEnded, reloadNonce }: VideoPlayerPanelProps) => {
     const enforceSilentPlayback = (element: HTMLVideoElement | null) => {
         if (!element) {
             return;
@@ -77,6 +78,19 @@ const VideoPlayerPanel = ({ media, hasMultipleItems, error, videoRef, onVideoEnd
                         src={media.url}
                         title="Vídeo institucional"
                         allow="autoplay; encrypted-media"
+                        frameBorder={0}
+                    />
+                ) : media?.kind === 'embed' ? (
+                    // An arbitrary webpage link (not YouTube, not a direct video
+                    // file) — we can't control mute/loop/ended on its content, so
+                    // it's forced to reload periodically via `reloadNonce` to
+                    // simulate a restart (see useTvMedia).
+                    <iframe
+                        key={`${media.id}-${reloadNonce}`}
+                        className="rounded-lg lg:rounded-xl w-full h-full min-h-[140px] max-h-[30vh] lg:max-h-[34vh] xl:max-h-[42vh] 2xl:max-h-[46vh]"
+                        src={media.url}
+                        title="Vídeo institucional"
+                        allow="autoplay"
                         frameBorder={0}
                     />
                 ) : (
