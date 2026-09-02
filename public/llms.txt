@@ -1,0 +1,10 @@
+# Totem de Atendimento
+
+> Internal queue management system for student/service ticket kiosks (Unilab and CRE), covering public ticket generation, an attendant console, an admin panel, and a TV display.
+
+This is an internal operational tool, not a public content site. It requires authentication for staff-facing screens and is not intended to be indexed, summarized, or crawled by search engines or AI agents.
+
+## Notes
+
+- No public documentation or content is exposed at this domain.
+- API access requires an API key and, for staff routes, a bearer token.
