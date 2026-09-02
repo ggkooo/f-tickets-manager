@@ -28,20 +28,24 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
                 className="w-full flex items-center justify-between bg-white border border-slate-200 text-slate-700 rounded-xl px-4 py-3 font-semibold text-lg outline-none hover:border-primary transition-colors hover:shadow-sm"
             >
                 <span>{selectedOption.label}</span>
-                <span className="material-icons-outlined text-slate-400 select-none transition-transform duration-200" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                <span aria-hidden="true" className="material-icons-outlined text-slate-400 select-none transition-transform duration-200" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
                     expand_more
                 </span>
             </button>
 
             {isOpen && (
-                <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-xl shadow-xl overflow-hidden py-1 animate-fade-in-up">
+                <div role="listbox" className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-xl shadow-xl overflow-hidden py-1 animate-fade-in-up">
                     {options.map((option) => (
                         <button
                             key={option.value}
                             type="button"
+                            role="option"
+                            aria-selected={value === option.value}
                             onClick={() => {
                                 onChange(option.value);
                                 setIsOpen(false);
