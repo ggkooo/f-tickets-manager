@@ -1,6 +1,7 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
 import type { LocationSlug } from '../locations';
 import { withLocationQuery } from '../locations';
+import { handleExpiredSession } from '../auth/sessionExpiry';
 import type { ApiTicket, Ticket } from '../screens/Attendent/types';
 
 const createTimeoutController = (timeoutMs: number) => {
@@ -68,6 +69,11 @@ const request = async (path: string, init: RequestInit = {}) => {
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                handleExpiredSession();
+                throw new Error('Sua sessão expirou. Faça login novamente.');
+            }
+
             throw new Error('Falha de comunicação com a API de atendimento.');
         }
 
