@@ -14,10 +14,13 @@ export interface ApiUser {
     updated_at: string;
 }
 
+export type VideoType = 'upload' | 'link';
+
 export interface ApiVideo {
-    filename: string;
-    url: string;
-    created_at?: string;
+    id: number;
+    type: VideoType;
+    filename: string | null;
+    url: string | null;
 }
 
 export interface AttendanceReportResponse {
@@ -312,15 +315,48 @@ export const fetchAdminVideos = async (accessToken?: string) => {
     return Array.isArray(data) ? (data as ApiVideo[]) : [];
 };
 
-export const deleteAdminVideo = async (filename: string, accessToken?: string) => {
+export const deleteAdminVideo = async (videoId: number, accessToken?: string) => {
     await request(
-        buildApiUrl(`${VIDEOS_PATH}/${encodeURIComponent(filename)}`),
+        buildApiUrl(`${VIDEOS_PATH}/${videoId}`),
         {
             method: 'DELETE',
             headers: buildAuthHeaders(accessToken),
         },
         'Não foi possível remover o vídeo.',
     );
+};
+
+export const uploadAdminVideo = async (file: File, accessToken?: string) => {
+    const formData = new FormData();
+    formData.append('video', file);
+
+    const response = await request(
+        buildApiUrl(`${VIDEOS_PATH}/upload`),
+        {
+            method: 'POST',
+            headers: buildAuthHeaders(accessToken),
+            body: formData,
+        },
+        'Não foi possível enviar o vídeo.',
+    );
+
+    const body = (await response.json()) as { data: ApiVideo };
+    return body.data;
+};
+
+export const addAdminVideoLink = async (url: string, accessToken?: string) => {
+    const response = await request(
+        buildApiUrl(`${VIDEOS_PATH}/link`),
+        {
+            method: 'POST',
+            headers: buildJsonHeaders(accessToken),
+            body: JSON.stringify({ url }),
+        },
+        'Não foi possível adicionar o link do vídeo.',
+    );
+
+    const body = (await response.json()) as { data: ApiVideo };
+    return body.data;
 };
 
 export const fetchAttendanceReport = async (startDate: string, endDate: string, accessToken?: string) => {
