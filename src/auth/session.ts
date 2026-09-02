@@ -1,6 +1,6 @@
 export const AUTH_SESSION_KEY = 'totem_auth';
 
-import type { UnilabLocation } from '../locations';
+import type { LocationSlug } from '../locations';
 
 export interface AuthSessionData {
     status: string;
@@ -13,7 +13,7 @@ export interface AuthSessionData {
             uuid: string;
             name: string;
             login: string;
-            location: UnilabLocation;
+            location: LocationSlug;
             active: boolean;
             is_admin: boolean;
             is_super_admin: boolean;
@@ -83,7 +83,7 @@ export const hasAdminAccess = (): boolean => {
     return Boolean(user?.is_admin || user?.is_super_admin);
 };
 
-export const getUserLocation = (): UnilabLocation | null => {
+export const getUserLocation = (): LocationSlug | null => {
     const session = getAuthSession();
     return session?.data?.user?.location ?? null;
 };
