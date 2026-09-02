@@ -1,17 +1,16 @@
+import type { Institution } from '../../locations';
 import type { ServiceOption } from './types';
 
-export const SERVICE_OPTIONS: ServiceOption[] = [
+export const UNILAB_SERVICE_OPTIONS: ServiceOption[] = [
     {
         icon: 'support_agent',
         title: 'Atendimento Normal',
         subtitle: 'Atendimento geral para orientações e solicitações comuns.',
-        variant: 'primary',
     },
     {
         icon: 'priority_high',
         title: 'Atendimento Preferencial',
         subtitle: 'Prioridade para os públicos com atendimento preferencial.',
-        variant: 'warning',
         badges: [
             { icon: 'elderly', label: '60+' },
             { icon: 'pregnant_woman', label: 'Gestante' },
@@ -24,7 +23,45 @@ export const SERVICE_OPTIONS: ServiceOption[] = [
         icon: 'inventory_2',
         title: 'Retirada de Exames ou Entrega de Amostras',
         subtitle: 'Atendimento para recebimento de exames ou entrega de amostras.',
-        variant: 'success',
         fullWidth: true,
     },
 ];
+
+// The `subtitle` of each option below is what renders inside the <span> on
+// the service card (see ActionCard). Edit the text here to change what's
+// shown to the user — no other file needs to change.
+//
+// Each option's color comes from its `title` via
+// `src/constants/serviceTypeColors.ts` — that's also what colors the
+// matching badge on the Attendant screen, so the two always stay in sync.
+export const CRE_SERVICE_OPTIONS: ServiceOption[] = [
+    {
+        icon: 'school',
+        title: 'Acadêmico/Matrículas',
+        subtitle: 'Dúvidas acadêmicas, matrícula, rematrícula e trancamento.',
+    },
+    {
+        icon: 'description',
+        title: 'Solicitação de Documentos',
+        subtitle: 'Histórico escolar, declarações, atestados e certificados.',
+    },
+    {
+        icon: 'receipt_long',
+        title: 'Impressão de Boletos',
+        subtitle: 'Emissão e reimpressão de boletos de mensalidade.',
+    },
+    {
+        icon: 'account_balance',
+        title: 'Financiamentos e Bolsas',
+        subtitle: 'Informações sobre financiamento estudantil e programas de bolsa.',
+    },
+    {
+        icon: 'handshake',
+        title: 'Renegociação de Mensalidades',
+        subtitle: 'Acordos, parcelamento e renegociação de débitos.',
+        fullWidth: true,
+    },
+];
+
+export const getServiceOptions = (institution: Institution | null): ServiceOption[] =>
+    institution === 'cre' ? CRE_SERVICE_OPTIONS : UNILAB_SERVICE_OPTIONS;
