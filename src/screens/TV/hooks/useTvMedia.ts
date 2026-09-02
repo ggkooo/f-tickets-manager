@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
+import type { LocationSlug } from '../../../locations';
 import { fetchTvMedia } from '../../../services/tvService';
 import type { TvMedia } from '../types';
 import { getMediaSignature } from '../utils';
 
 const MEDIA_REFRESH_INTERVAL_MS = 30000;
-const IMAGE_DISPLAY_DURATION_MS = 10000;
+// YouTube embeds don't expose a DOM "ended" event the way a plain <video>
+// does, so those advance on a fixed timer instead.
+const YOUTUBE_DISPLAY_DURATION_MS = 60000;
 
 /**
- * Owns the TV screen's background media playlist (videos/images fetched
- * from the server): polling for new/removed files and auto-advancing past
- * images after a fixed duration (videos advance on their own `ended` event,
- * handled by the caller via `advanceToNextMedia`).
+ * Owns the TV screen's video playlist for this location: polling for
+ * uploads/links added or removed in the admin panel, and auto-advancing.
+ * Plain videos advance on their own `ended` event (via `advanceToNextMedia`,
+ * called by the caller); YouTube embeds advance on a fixed timer here since
+ * there's no `ended` event to listen for.
  */
-export const useTvMedia = () => {
+export const useTvMedia = (location: LocationSlug) => {
     const [mediaItems, setMediaItems] = useState<TvMedia[]>([]);
     const [mediaError, setMediaError] = useState<string | null>(null);
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
@@ -29,7 +33,7 @@ export const useTvMedia = () => {
 
     const refreshMedia = async () => {
         try {
-            const nextMedia = await fetchTvMedia();
+            const nextMedia = await fetchTvMedia(location);
 
             setMediaError(null);
             setMediaItems((previousMedia) => {
@@ -62,18 +66,18 @@ export const useTvMedia = () => {
         }, MEDIA_REFRESH_INTERVAL_MS);
 
         return () => window.clearInterval(interval);
-    }, []);
+    }, [location]);
 
     useEffect(() => {
         const currentMedia = mediaItems[currentMediaIndex];
 
-        if (currentMedia?.type !== 'image' || mediaItems.length <= 1) {
+        if (currentMedia?.kind !== 'youtube' || mediaItems.length <= 1) {
             return;
         }
 
         const timeoutId = window.setTimeout(() => {
             advanceToNextMedia();
-        }, IMAGE_DISPLAY_DURATION_MS);
+        }, YOUTUBE_DISPLAY_DURATION_MS);
 
         return () => window.clearTimeout(timeoutId);
     }, [currentMediaIndex, mediaItems]);
