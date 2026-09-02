@@ -1,20 +1,23 @@
+import { type ServiceColor, getServiceColor } from '../../constants/serviceTypeColors';
 import type { Ticket } from './types';
 
 export const ALL_SERVICE_TYPES = 'Todos';
 
-export const getServiceBadgeClassName = (serviceType: string): string => {
-    const normalized = serviceType.toLowerCase();
-
-    if (normalized.includes('preferencial')) {
-        return 'bg-red-500 text-white';
-    }
-
-    if (normalized.includes('retirada') || normalized.includes('entrega')) {
-        return 'bg-amber-500 text-white';
-    }
-
-    return 'bg-blue-500 text-white';
+const BADGE_CLASS_BY_COLOR: Record<ServiceColor, string> = {
+    blue: 'bg-blue-500 text-white',
+    red: 'bg-red-500 text-white',
+    amber: 'bg-amber-500 text-white',
+    indigo: 'bg-indigo-500 text-white',
+    emerald: 'bg-emerald-500 text-white',
+    rose: 'bg-rose-500 text-white',
+    cyan: 'bg-cyan-500 text-white',
+    violet: 'bg-violet-500 text-white',
 };
+
+// Same color the matching button uses on the "get ticket" screen — see
+// src/constants/serviceTypeColors.ts, the single source of truth for both.
+export const getServiceBadgeClassName = (serviceType: string): string =>
+    BADGE_CLASS_BY_COLOR[getServiceColor(serviceType)];
 
 export const getWaitingTimeLabel = (timestamp: Date): string => {
     const diffMs = Math.max(0, Date.now() - timestamp.getTime());
