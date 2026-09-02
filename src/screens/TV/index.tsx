@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Header from '../../components/layout/Header';
-import { DEFAULT_UNILAB_LOCATION, type UnilabLocation } from '../../locations';
+import { DEFAULT_UNILAB_LOCATION, type LocationSlug } from '../../locations';
 import { useRouteLocation } from '../../locations/useRouteLocation';
 import { fetchRecentlyCalledTickets, fetchTvMedia } from '../../services/tvService';
 import CurrentTicketPanel from './components/CurrentTicketPanel';
@@ -119,7 +119,7 @@ const Tv = () => {
         });
     };
 
-    const refreshTickets = async (location: UnilabLocation, showLoading = false) => {
+    const refreshTickets = async (location: LocationSlug, showLoading = false) => {
         if (showLoading) {
             setIsLoadingTickets(true);
         }
