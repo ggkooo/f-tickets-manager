@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomSelect } from '../../../components/ui/CustomSelect';
+import CustomSelect from '../../../components/ui/CustomSelect';
 import type { SelectOption, Ticket } from '../types';
 import { getServiceBadgeClassName } from '../utils';
 
