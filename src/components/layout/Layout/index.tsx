@@ -5,10 +5,6 @@ interface LayoutProps {
     children: ReactNode;
     contentClassName?: string;
     showHeader?: boolean;
-    // Kiosk-facing public screens (the ticket screen) must never scroll —
-    // this caps the page to exactly one viewport instead of growing with
-    // content. Screens with variable-length content (Admin, Attendent)
-    // should leave this off and keep the normal scrollable page.
     fitViewport?: boolean;
 }
 
