@@ -2,14 +2,6 @@ import { useEffect, useRef } from 'react';
 
 const ALERT_SOUND_SRC = '/assets/sound/sound.mp3';
 
-/**
- * Owns the "new ticket called" alert sound: creates/cleans up the Audio
- * element, and works around browser autoplay policy by silently priming
- * playback on the totem's first touch/click/keypress (TVs load this screen
- * unattended, before anyone has interacted with the page).
- *
- * Returns `playAlert()` — call it whenever a new ticket should be announced.
- */
 export const useTicketAlertSound = () => {
     const alertAudioRef = useRef<HTMLAudioElement | null>(null);
     const mediaUnlockedRef = useRef(false);
@@ -22,7 +14,6 @@ export const useTicketAlertSound = () => {
             return;
         }
 
-        // Some TV browsers keep stale media state; reset audio properties before every playback.
         audio.pause();
         audio.currentTime = 0;
         audio.muted = false;
@@ -31,7 +22,6 @@ export const useTicketAlertSound = () => {
         void audio.play().catch(() => {
             pendingAlertPlaybackRef.current = true;
 
-            // Fallback to a fresh instance in case the original audio element became blocked.
             const fallbackAudio = new Audio(ALERT_SOUND_SRC);
             fallbackAudio.preload = 'auto';
             fallbackAudio.muted = false;
@@ -41,9 +31,7 @@ export const useTicketAlertSound = () => {
 
             void fallbackAudio.play().then(() => {
                 pendingAlertPlaybackRef.current = false;
-            }).catch(() => {
-                // Ignore autoplay blocks silently to avoid interrupting the TV screen flow.
-            });
+            }).catch(() => {});
         });
     };
 
@@ -92,9 +80,7 @@ export const useTicketAlertSound = () => {
                 if (pendingAlertPlaybackRef.current) {
                     playAlert();
                 }
-            }).catch(() => {
-                // Even if prime playback fails, keep the app flow running.
-            });
+            }).catch(() => {});
         };
 
         window.addEventListener('pointerdown', unlockMediaPlayback, { passive: true });
