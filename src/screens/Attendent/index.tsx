@@ -30,7 +30,7 @@ const Attendant: React.FC = () => {
         removeTicketFromQueue,
     } = useAttendantQueue(userLocation);
 
-    const { history, refreshCompletedHistory } = useAttendantHistory(loggedCounter);
+    const { history, refreshCompletedHistory } = useAttendantHistory(loggedCounter, userLocation);
 
     const {
         currentTicket,

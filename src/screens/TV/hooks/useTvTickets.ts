@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTicketRealtime } from '../../../hooks/useTicketRealtime';
 import type { LocationSlug } from '../../../locations';
 import { fetchRecentlyCalledTickets } from '../../../services/tvService';
 import type { TvTicket } from '../types';
 import { getTicketsSignature } from '../utils';
 
+// useTicketRealtime is wired up and ready, but this network's Kaspersky
+// Endpoint Security currently blocks the WebSocket handshake before it
+// reaches Reverb (confirmed: raw `new WebSocket()` closes with code 1006,
+// no connection ever registers server-side) — until that's allowlisted,
+// this poll is the only update path, so it stays at the original interval
+// rather than the 60s "safety net" cadence it's meant to be.
 const TICKETS_REFRESH_INTERVAL_MS = 5000;
 
 const getTicketAlertSignature = (ticket: TvTicket | null) => {
@@ -85,6 +92,8 @@ export const useTvTickets = (location: LocationSlug, onNewTopTicket: () => void)
 
         return () => window.clearInterval(interval);
     }, [location]);
+
+    useTicketRealtime(location, () => void refreshTickets());
 
     return { tickets, isLoadingTickets, ticketsError };
 };
