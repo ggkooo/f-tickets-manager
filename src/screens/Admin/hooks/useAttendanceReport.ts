@@ -3,9 +3,6 @@ import { fetchAttendanceReport } from '../../../services/adminService';
 import { resolveInstitution, type LocationSlug } from '../../../locations';
 import { createAttendanceReportPdf } from '../reportPdf';
 
-/**
- * Owns the date range and PDF export for the "Exportação de dados" card.
- */
 export const useAttendanceReport = (accessToken: string | undefined, userLocation: LocationSlug | undefined) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
