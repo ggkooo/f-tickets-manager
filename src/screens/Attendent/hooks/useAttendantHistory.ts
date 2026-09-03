@@ -6,16 +6,8 @@ import { fetchCompletedTickets } from '../../../services/attendantService';
 import type { Ticket } from '../types';
 import { getHistorySignature } from '../utils';
 
-// useTicketRealtime is wired up and ready, but this network's Kaspersky
-// Endpoint Security currently blocks the WebSocket handshake before it
-// reaches Reverb — until that's allowlisted, this poll is the only update
-// path, so it stays at the original interval (see useTvTickets.ts for the
-// full diagnosis).
 const HISTORY_REFRESH_INTERVAL_MS = 5000;
 
-/**
- * Owns today's completed-attendance history for this attendant's counter.
- */
 export const useAttendantHistory = (loggedCounter: string, location: LocationSlug | null) => {
     const [history, setHistory] = useState<Ticket[]>([]);
 
