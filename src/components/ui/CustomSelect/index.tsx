@@ -7,7 +7,7 @@ interface CustomSelectProps {
     className?: string;
 }
 
-export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, options, className = '' }) => {
+const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, options, className = '' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -61,3 +61,5 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
         </div>
     );
 };
+
+export default CustomSelect;
