@@ -57,25 +57,32 @@ npm run dev
 
 The app is served at `http://localhost:5173`.
 
-### Run on the Network
+### Run on the Network / HTTPS
 
-The dev server binds to all network interfaces by default, so it can be reached from other devices on the same network:
+`npm run dev` is a development server — don't point real devices at it.
+Production is a static build served over HTTPS by a
+[Caddy](https://caddyserver.com) reverse proxy, which also forwards `/api/*`
+to the backend so the whole app lives under one origin:
 
-```text
-http://<host-machine-ip>:5173
+```bash
+npm run build
 ```
 
-For example, on this project's host machine (`200.132.193.104`):
-
-```text
-http://200.132.193.104:5173
-```
-
-Point `VITE_API_BASE_URL` in `.env` to the backend's network address as well:
+Point `VITE_API_BASE_URL` in `.env` at that same HTTPS origin, under `/api`,
+**before building** — Vite bakes `VITE_*` values into the build at build
+time, so changing `.env` after the fact does nothing until you rebuild:
 
 ```env
-VITE_API_BASE_URL=http://200.132.193.104:8000/api
+VITE_API_BASE_URL=https://200.132.193.104:8443/api
 ```
+
+Caddy then serves `dist/` directly — see [`../Caddyfile`](../Caddyfile) for
+the reverse proxy / TLS setup, including why it listens on 8443 instead of
+443 on this host, and how to trust its certificate on other devices so they
+don't see a browser warning.
+
+Whenever frontend code changes, `npm run build` again — Caddy serves
+whatever is currently in `dist/`, not live code.
 
 ### Build
 
