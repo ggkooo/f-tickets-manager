@@ -7,15 +7,8 @@ import {
     uploadAdminVideo,
 } from '../../../services/adminService';
 
-// Matches the backend's UploadVideoRequest max rule (5GB).
 const MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024 * 1024;
 
-/**
- * Owns the "Vídeos da TV" card: the list of videos (uploads + links)
- * registered for this location, and every action on them. Videos are
- * always scoped to the authenticated superadmin's own location on the
- * backend — there's no location picker here by design.
- */
 export const useVideoManagement = (accessToken: string | undefined, enabled: boolean) => {
     const [videos, setVideos] = useState<ApiVideo[]>([]);
     const [linkUrl, setLinkUrl] = useState('');
@@ -47,8 +40,6 @@ export const useVideoManagement = (accessToken: string | undefined, enabled: boo
 
     useEffect(() => {
         if (!enabled) {
-            // Defensive reset for the (practically unreachable) case where
-            // `enabled` flips to false after already being true.
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setVideos([]);
             return;
