@@ -27,13 +27,6 @@ export const UNILAB_SERVICE_OPTIONS: ServiceOption[] = [
     },
 ];
 
-// The `subtitle` of each option below is what renders inside the <span> on
-// the service card (see ActionCard). Edit the text here to change what's
-// shown to the user — no other file needs to change.
-//
-// Each option's color comes from its `title` via
-// `src/constants/serviceTypeColors.ts` — that's also what colors the
-// matching badge on the Attendant screen, so the two always stay in sync.
 export const CRE_SERVICE_OPTIONS: ServiceOption[] = [
     {
         icon: 'school',
