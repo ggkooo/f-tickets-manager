@@ -14,8 +14,6 @@ const Header: React.FC = () => {
   const logoSizeClass = showClock
     ? 'w-[clamp(100px,6.8vw,220px)] object-contain'
     : 'w-[clamp(110px,8vw,260px)] object-contain';
-  // The CRE mark is a squarer, denser logo than Unilab's — capped smaller so it
-  // doesn't visually dominate the header next to the wordmark-style Unilab logo.
   const creLogoSizeClass = showClock
     ? 'h-[clamp(32px,4vw,52px)] w-auto object-contain'
     : 'h-[clamp(36px,4.6vw,60px)] w-auto object-contain';
