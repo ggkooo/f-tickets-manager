@@ -12,6 +12,7 @@ interface CurrentAttendanceCardProps {
     isRecallingCurrentTicket: boolean;
     isCompletingCurrentTicket: boolean;
     isCancellingCurrentTicket: boolean;
+    attendanceError: string | null;
     onSelectedTypeChange: (serviceType: string) => void;
     onCallNext: () => void;
     onRecallCurrentTicket: () => void;
@@ -29,6 +30,7 @@ const CurrentAttendanceCard: React.FC<CurrentAttendanceCardProps> = ({
     isRecallingCurrentTicket,
     isCompletingCurrentTicket,
     isCancellingCurrentTicket,
+    attendanceError,
     onSelectedTypeChange,
     onCallNext,
     onRecallCurrentTicket,
@@ -52,6 +54,10 @@ const CurrentAttendanceCard: React.FC<CurrentAttendanceCardProps> = ({
             )}
 
             <div className="w-full max-w-lg flex flex-col gap-4 mt-auto">
+                {attendanceError && (
+                    <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{attendanceError}</div>
+                )}
+
                 <div className="flex items-center gap-4 bg-slate-50 p-2 rounded-2xl mx-auto w-full border border-slate-100">
                     <span className="pl-4 text-slate-500 font-medium">Chamar:</span>
                     <CustomSelect
