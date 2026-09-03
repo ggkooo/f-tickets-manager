@@ -3,16 +3,7 @@ import type { LocationSlug } from '../locations';
 import { withLocationQuery } from '../locations';
 import { handleExpiredSession } from '../auth/sessionExpiry';
 import type { ApiTicket, Ticket } from '../screens/Attendent/types';
-
-const createTimeoutController = (timeoutMs: number) => {
-    const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
-
-    return {
-        signal: controller.signal,
-        clear: () => window.clearTimeout(timeoutId),
-    };
-};
+import { request as httpRequest } from './httpClient';
 
 const getApiHeaders = (accessToken?: string) => ({
     'Content-Type': 'application/json',
@@ -59,39 +50,18 @@ const mapCompletedTicket = (ticket: ApiTicket, fallbackCounter: string): Ticket 
     };
 };
 
-const request = async (path: string, init: RequestInit = {}) => {
-    const timeout = createTimeoutController(apiConfig.timeoutMs);
-
-    try {
-        const response = await fetch(buildApiUrl(path), {
-            ...init,
-            signal: timeout.signal,
-        });
-
-        if (!response.ok) {
-            if (response.status === 401) {
-                handleExpiredSession();
-                throw new Error('Sua sessão expirou. Faça login novamente.');
-            }
-
-            throw new Error('Falha de comunicação com a API de atendimento.');
-        }
-
-        return response;
-    } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-            throw new Error('A requisição de atendimento demorou demais. Tente novamente.');
-        }
-
-        if (error instanceof Error) {
-            throw error;
-        }
-
-        throw new Error('Falha de comunicação com a API de atendimento.');
-    } finally {
-        timeout.clear();
-    }
-};
+const request = async (path: string, init: RequestInit = {}) =>
+    httpRequest(
+        buildApiUrl(path),
+        init,
+        'Falha de comunicação com a API de atendimento.',
+        {
+            timeoutMs: apiConfig.timeoutMs,
+            onUnauthorized: handleExpiredSession,
+            timeoutErrorMessage: 'A requisição de atendimento demorou demais. Tente novamente.',
+            genericErrorMessage: 'Falha de comunicação com a API de atendimento.',
+        },
+    );
 
 export const fetchWaitingTickets = async (location: LocationSlug) => {
     const response = await request(withLocationQuery(apiConfig.ticketsPath, location), {
