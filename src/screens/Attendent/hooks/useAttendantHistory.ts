@@ -6,9 +6,6 @@ import { getHistorySignature } from '../utils';
 
 const HISTORY_REFRESH_INTERVAL_MS = 5000;
 
-/**
- * Owns today's completed-attendance history for this attendant's counter.
- */
 export const useAttendantHistory = (loggedCounter: string) => {
     const [history, setHistory] = useState<Ticket[]>([]);
 
