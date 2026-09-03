@@ -33,28 +33,24 @@ const mapPermissionError = (message: string): string => {
 };
 
 const getErrorMessage = async (response: Response, fallbackMessage: string): Promise<string> => {
-    try {
-        const body = (await response.json()) as ApiErrorBody;
+    const body = (await response.json().catch(() => null)) as ApiErrorBody | null;
 
-        if (body.errors && typeof body.errors === 'object') {
-            const firstFieldError = Object.values(body.errors)
-                .flatMap((value) => (Array.isArray(value) ? value : [value]))
-                .find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+    if (body?.errors && typeof body.errors === 'object') {
+        const firstFieldError = Object.values(body.errors)
+            .flatMap((value) => (Array.isArray(value) ? value : [value]))
+            .find((value): value is string => typeof value === 'string' && value.trim().length > 0);
 
-            if (firstFieldError) {
-                return firstFieldError;
-            }
+        if (firstFieldError) {
+            return firstFieldError;
         }
+    }
 
-        if (body.message) {
-            return mapPermissionError(body.message);
-        }
+    if (body?.message) {
+        return mapPermissionError(body.message);
+    }
 
-        if (body.error) {
-            return mapPermissionError(body.error);
-        }
-    } catch {
-        // intentionally empty: response body wasn't parseable JSON, fall back below
+    if (body?.error) {
+        return mapPermissionError(body.error);
     }
 
     if (response.status === 403) {
