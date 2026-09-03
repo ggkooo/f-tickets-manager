@@ -1,4 +1,5 @@
 import { type ServiceColor, getServiceColor } from '../../constants/serviceTypeColors';
+import { getSignature } from '../../utils/signature';
 import type { Ticket } from './types';
 
 export const ALL_SERVICE_TYPES = 'Todos';
@@ -14,8 +15,6 @@ const BADGE_CLASS_BY_COLOR: Record<ServiceColor, string> = {
     violet: 'bg-violet-500 text-white',
 };
 
-// Same color the matching button uses on the "get ticket" screen — see
-// src/constants/serviceTypeColors.ts, the single source of truth for both.
 export const getServiceBadgeClassName = (serviceType: string): string =>
     BADGE_CLASS_BY_COLOR[getServiceColor(serviceType)];
 
@@ -84,20 +83,14 @@ export const formatCounterLabel = (counterName?: string): string => {
     return normalized.replace(/_/g, ' ').replace(/^guiche\b/i, 'Guichê');
 };
 
-export const getQueueSignature = (tickets: Ticket[]): string => {
-    return tickets
-        .map((ticket) => `${ticket.id}|${ticket.number}|${ticket.serviceType}|${ticket.timestamp.getTime()}`)
-        .join(';');
-};
+export const getQueueSignature = (tickets: Ticket[]): string =>
+    getSignature(tickets, (ticket) => `${ticket.id}:${ticket.number}:${ticket.serviceType}:${ticket.timestamp.getTime()}`);
 
-export const getHistorySignature = (tickets: Ticket[]): string => {
-    return tickets
-        .map((ticket) => {
-            const createdAt = ticket.createdAt?.getTime() ?? 0;
-            const calledAt = ticket.calledAt?.getTime() ?? 0;
-            const counterName = ticket.counterName ?? '';
+export const getHistorySignature = (tickets: Ticket[]): string =>
+    getSignature(tickets, (ticket) => {
+        const createdAt = ticket.createdAt?.getTime() ?? 0;
+        const calledAt = ticket.calledAt?.getTime() ?? 0;
+        const counterName = ticket.counterName ?? '';
 
-            return `${ticket.id}|${ticket.number}|${ticket.serviceType}|${ticket.timestamp.getTime()}|${createdAt}|${calledAt}|${counterName}`;
-        })
-        .join(';');
-};
+        return `${ticket.id}:${ticket.number}:${ticket.serviceType}:${ticket.timestamp.getTime()}:${createdAt}:${calledAt}:${counterName}`;
+    });
