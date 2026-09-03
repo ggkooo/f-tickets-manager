@@ -1,3 +1,4 @@
+import React from 'react';
 import Badge from '../../../components/ui/Badges';
 import type { TvTicket } from '../types';
 import { formatCounterLabel, getServiceBadgeColor, getServicePanelTheme } from '../utils';
@@ -8,7 +9,7 @@ interface CurrentTicketPanelProps {
     error: string | null;
 }
 
-const CurrentTicketPanel = ({ ticket, isLoading, error }: CurrentTicketPanelProps) => {
+const CurrentTicketPanel: React.FC<CurrentTicketPanelProps> = ({ ticket, isLoading, error }) => {
     const panelTheme = getServicePanelTheme(ticket?.serviceType);
 
     return (
