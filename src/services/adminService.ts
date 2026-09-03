@@ -1,5 +1,6 @@
 import { apiConfig, buildApiUrl } from './apiConfig';
 import { handleExpiredSession } from '../auth/sessionExpiry';
+import { request as httpRequest } from './httpClient';
 
 export interface ApiUser {
     id: number;
@@ -133,29 +134,6 @@ const VIDEOS_PATH = import.meta.env.VITE_VIDEOS_PATH ?? '/videos';
 const ATTENDANCE_REPORT_PATH = import.meta.env.VITE_REPORT_PDF_PATH ?? '/reports/attendances';
 const PRINTER_SETTINGS_PATH = import.meta.env.VITE_PRINTER_SETTINGS_PATH ?? '/printer-settings';
 
-type ApiErrorBody = {
-    message?: string;
-    error?: string;
-    errors?: Record<string, string[] | string>;
-};
-
-// A timeoutMs of 0 (or less) disables the timeout entirely — used for large
-// video uploads, which can legitimately take much longer than a normal API
-// call and shouldn't be aborted mid-transfer.
-const createTimeoutController = (timeoutMs: number) => {
-    if (timeoutMs <= 0) {
-        return { signal: undefined, clear: () => {} };
-    }
-
-    const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
-
-    return {
-        signal: controller.signal,
-        clear: () => window.clearTimeout(timeoutId),
-    };
-};
-
 const buildAuthHeaders = (accessToken?: string): HeadersInit => ({
     'X-API-KEY': API_KEY,
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
@@ -166,85 +144,8 @@ const buildJsonHeaders = (accessToken?: string): HeadersInit => ({
     'Content-Type': 'application/json',
 });
 
-const getErrorMessage = async (response: Response, fallbackMessage: string) => {
-    const mapPermissionError = (message: string) => {
-        const normalizedMessage = message.trim().toLowerCase();
-
-        if (normalizedMessage.includes('super administrator access required')) {
-            return 'Acesso negado: esta ação é exclusiva de superadministrador.';
-        }
-
-        if (normalizedMessage.includes('administrator access required')) {
-            return 'Acesso negado: esta ação exige perfil administrador.';
-        }
-
-        return message;
-    };
-
-    try {
-        const body = (await response.json()) as ApiErrorBody;
-
-        if (body.errors && typeof body.errors === 'object') {
-            const firstFieldError = Object.values(body.errors)
-                .flatMap((value) => (Array.isArray(value) ? value : [value]))
-                .find((value): value is string => typeof value === 'string' && value.trim().length > 0);
-
-            if (firstFieldError) {
-                return firstFieldError;
-            }
-        }
-
-        if (body.message) {
-            return mapPermissionError(body.message);
-        }
-
-        if (body.error) {
-            return mapPermissionError(body.error);
-        }
-    } catch {
-        // Ignore parse errors and fallback to default error.
-    }
-
-    if (response.status === 403) {
-        return 'Você não tem permissão para executar esta ação.';
-    }
-
-    return fallbackMessage;
-};
-
-const request = async (url: string, init: RequestInit, fallbackMessage: string, timeoutMs: number = apiConfig.timeoutMs) => {
-    const timeout = createTimeoutController(timeoutMs);
-
-    try {
-        const response = await fetch(url, {
-            ...init,
-            signal: timeout.signal,
-        });
-
-        if (!response.ok) {
-            if (response.status === 401) {
-                handleExpiredSession();
-                throw new Error('Sua sessão expirou. Faça login novamente.');
-            }
-
-            throw new Error(await getErrorMessage(response, fallbackMessage));
-        }
-
-        return response;
-    } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-            throw new Error('A requisição demorou demais. Tente novamente.');
-        }
-
-        if (error instanceof Error) {
-            throw error;
-        }
-
-        throw new Error('Falha de comunicação com a API.');
-    } finally {
-        timeout.clear();
-    }
-};
+const request = async (url: string, init: RequestInit, fallbackMessage: string, timeoutMs: number = apiConfig.timeoutMs) =>
+    httpRequest(url, init, fallbackMessage, { timeoutMs, onUnauthorized: handleExpiredSession });
 
 export const fetchAdminUsers = async (accessToken?: string) => {
     const response = await request(
@@ -345,7 +246,7 @@ export const uploadAdminVideo = async (file: File, accessToken?: string) => {
             body: formData,
         },
         'Não foi possível enviar o vídeo.',
-        0, // no timeout — uploads can be up to 5GB and take a while
+        0,
     );
 
     const body = (await response.json()) as { data: ApiVideo };
