@@ -21,12 +21,6 @@ const getTicketAlertSignature = (ticket: TvTicket | null) => {
     ].join(':');
 };
 
-/**
- * Polls the recently-called tickets for this location and calls `onNewTopTicket`
- * whenever the currently-displayed (top) ticket changes — the TV screen uses
- * that to play the alert sound. Never fires on the very first load (nothing
- * should be announced just because the page opened).
- */
 export const useTvTickets = (location: LocationSlug, onNewTopTicket: () => void) => {
     const [tickets, setTickets] = useState<TvTicket[]>([]);
     const [isLoadingTickets, setIsLoadingTickets] = useState(true);
