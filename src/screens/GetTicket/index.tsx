@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import { DEFAULT_UNILAB_LOCATION } from '../../locations';
 import { useRouteInstitution, useRouteLocation } from '../../locations/useRouteLocation';
-import { createTicket } from '../../services/ticketService.ts';
+import { createTicket } from '../../services/ticketService';
 import { getServiceOptions } from './constants';
 import GetTicketFeedback from './components/GetTicketFeedback';
 import GetTicketHero from './components/GetTicketHero';
