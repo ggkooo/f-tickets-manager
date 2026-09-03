@@ -14,12 +14,6 @@ import {
     type UserFormState,
 } from '../types';
 
-/**
- * Owns the "Usuários" section of the admin panel: the user list, the
- * edit/register forms, and every action that mutates a user (save, delete,
- * promote/demote). Only fetches when `enabled` is true (the caller passes
- * `isSuperAdmin`, since regular admins don't see user management).
- */
 export const useAdminUsers = (accessToken: string | undefined, enabled: boolean) => {
     const [users, setUsers] = useState<ApiUser[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -95,8 +89,6 @@ export const useAdminUsers = (accessToken: string | undefined, enabled: boolean)
 
     useEffect(() => {
         if (!enabled) {
-            // Defensive reset for the (practically unreachable) case where
-            // `enabled` flips to false after already being true.
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setUsers([]);
             setSelectedUserId(null);
