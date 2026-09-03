@@ -7,6 +7,9 @@ import {
     uploadAdminVideo,
 } from '../../../services/adminService';
 
+// Matches the backend's UploadVideoRequest max rule (5GB).
+const MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024 * 1024;
+
 /**
  * Owns the "Vídeos da TV" card: the list of videos (uploads + links)
  * registered for this location, and every action on them. Videos are
@@ -56,6 +59,11 @@ export const useVideoManagement = (accessToken: string | undefined, enabled: boo
     }, [enabled]);
 
     const handleUploadVideo = async (file: File) => {
+        if (file.size > MAX_UPLOAD_SIZE_BYTES) {
+            setVideoError('O vídeo excede o tamanho máximo permitido de 5GB.');
+            return;
+        }
+
         setIsUploadingVideo(true);
         setVideoError(null);
         setVideoSuccess(null);

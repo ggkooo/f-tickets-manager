@@ -139,7 +139,14 @@ type ApiErrorBody = {
     errors?: Record<string, string[] | string>;
 };
 
+// A timeoutMs of 0 (or less) disables the timeout entirely — used for large
+// video uploads, which can legitimately take much longer than a normal API
+// call and shouldn't be aborted mid-transfer.
 const createTimeoutController = (timeoutMs: number) => {
+    if (timeoutMs <= 0) {
+        return { signal: undefined, clear: () => {} };
+    }
+
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
 
@@ -205,8 +212,8 @@ const getErrorMessage = async (response: Response, fallbackMessage: string) => {
     return fallbackMessage;
 };
 
-const request = async (url: string, init: RequestInit, fallbackMessage: string) => {
-    const timeout = createTimeoutController(apiConfig.timeoutMs);
+const request = async (url: string, init: RequestInit, fallbackMessage: string, timeoutMs: number = apiConfig.timeoutMs) => {
+    const timeout = createTimeoutController(timeoutMs);
 
     try {
         const response = await fetch(url, {
@@ -338,6 +345,7 @@ export const uploadAdminVideo = async (file: File, accessToken?: string) => {
             body: formData,
         },
         'Não foi possível enviar o vídeo.',
+        0, // no timeout — uploads can be up to 5GB and take a while
     );
 
     const body = (await response.json()) as { data: ApiVideo };

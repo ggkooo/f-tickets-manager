@@ -12,7 +12,7 @@ const CurrentTicketPanel = ({ ticket, isLoading, error }: CurrentTicketPanelProp
     const panelTheme = getServicePanelTheme(ticket?.serviceType);
 
     return (
-        <section className={`min-h-0 flex flex-col justify-center items-center rounded-[1.5rem] lg:rounded-[2rem] 2xl:rounded-[2.5rem] shadow-2xl border p-4 sm:p-6 lg:p-10 2xl:p-12 text-center relative overflow-hidden ${panelTheme.card}`}>
+        <section className={`flex-1 min-h-0 flex flex-col justify-center items-center rounded-[1.5rem] lg:rounded-[2rem] 2xl:rounded-[2.5rem] shadow-2xl border p-4 sm:p-6 lg:p-10 2xl:p-12 text-center relative overflow-hidden ${panelTheme.card}`}>
             <div className={`absolute inset-0 animate-pulse rounded-[1.5rem] lg:rounded-[2rem] 2xl:rounded-[2.5rem] z-0 ${panelTheme.aura}`} />
 
             <div className="relative z-10 w-full flex flex-col items-center">
