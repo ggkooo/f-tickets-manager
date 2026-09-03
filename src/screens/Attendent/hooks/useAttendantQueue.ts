@@ -6,13 +6,6 @@ import { ALL_SERVICE_TYPES, getQueueSignature } from '../utils';
 
 const QUEUE_REFRESH_INTERVAL_MS = 5000;
 
-/**
- * Owns the waiting queue for this location: polling, and the "which service
- * type is the attendant filtering by" dropdown options derived from it.
- * `removeTicketFromQueue` is how a caller (e.g. useCurrentAttendance, after
- * calling a ticket) takes it out of the waiting list without waiting for
- * the next poll.
- */
 export const useAttendantQueue = (userLocation: LocationSlug | null) => {
     const [queue, setQueue] = useState<Ticket[]>([]);
     const [isLoadingQueue, setIsLoadingQueue] = useState(true);
