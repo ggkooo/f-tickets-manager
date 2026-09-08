@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Badge from '../../../components/ui/Badges';
 import type { ServiceColor } from '../../../constants/serviceTypeColors';
 import type { TvTicket } from '../types';
@@ -15,7 +15,7 @@ interface ServiceTypeBadgeProps {
     color: ServiceColor;
 }
 
-const ServiceTypeBadge = ({ serviceType, color }: ServiceTypeBadgeProps) => {
+const ServiceTypeBadge: React.FC<ServiceTypeBadgeProps> = ({ serviceType, color }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const measureRef = useRef<HTMLSpanElement>(null);
     const [isOverflowing, setIsOverflowing] = useState(false);
@@ -57,7 +57,7 @@ const ServiceTypeBadge = ({ serviceType, color }: ServiceTypeBadgeProps) => {
     );
 };
 
-const RecentCallsPanel = ({ tickets, isLoading, error }: RecentCallsPanelProps) => {
+const RecentCallsPanel: React.FC<RecentCallsPanelProps> = ({ tickets, isLoading, error }) => {
     const recentTickets = tickets.slice(0, 3);
 
     return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { clearAuthSession, getAccessToken, getAuthSession } from '../../auth/session';
-import { buildLocationLoginPath } from '../../locations';
+import { buildLocationLoginPath, DEFAULT_UNILAB_LOCATION } from '../../locations';
 import AdminHero from './components/AdminHero';
 import ConfirmActionDialog from './components/ConfirmActionDialog';
 import ReportSection from './components/ReportSection';
@@ -42,7 +42,7 @@ const Admin: React.FC = () => {
     };
 
     const handleLogout = () => {
-        const nextLoginPath = buildLocationLoginPath(currentUser?.location ?? 'campus');
+        const nextLoginPath = buildLocationLoginPath(currentUser?.location ?? DEFAULT_UNILAB_LOCATION);
         clearAuthSession();
         navigate(nextLoginPath, { replace: true });
     };

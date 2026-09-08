@@ -1,10 +1,9 @@
 import { getServiceColor, type ServiceColor } from '../../constants/serviceTypeColors';
+import { getSignature } from '../../utils/signature';
 import type { TvMedia, TvTicket } from './types';
 
 export const formatCounterLabel = (counterName: string) => counterName.replace(/^guiche_/i, '');
 
-// Same color the button on the "get ticket" screen and the /attendent badge
-// use for this service type — see src/constants/serviceTypeColors.ts.
 export const getServiceBadgeColor = (serviceType: string): ServiceColor => getServiceColor(serviceType);
 
 const PANEL_THEME_BY_COLOR: Record<ServiceColor, { card: string; aura: string; counterGradient: string }> = {
@@ -53,18 +52,13 @@ const PANEL_THEME_BY_COLOR: Record<ServiceColor, { card: string; aura: string; c
 export const getServicePanelTheme = (serviceType?: string) => PANEL_THEME_BY_COLOR[getServiceColor(serviceType ?? '')];
 
 export const getTicketsSignature = (tickets: TvTicket[]) =>
-    tickets.map((ticket) => `${ticket.id}:${ticket.updatedAt.getTime()}:${ticket.counterName}`).join('|');
+    getSignature(tickets, (ticket) => `${ticket.id}:${ticket.updatedAt.getTime()}:${ticket.counterName}`);
 
 export const getMediaSignature = (mediaItems: TvMedia[]) =>
-    mediaItems.map((media) => `${media.id}:${media.kind}:${media.url}`).join('|');
+    getSignature(mediaItems, (media) => `${media.id}:${media.kind}:${media.url}`);
 
 const YOUTUBE_HOSTNAME_PATTERN = /(?:^|\.)youtube\.com$|(?:^|\.)youtu\.be$/i;
 
-/**
- * Converts any common YouTube URL shape (watch/shorts/youtu.be/already-embed)
- * into an embed URL configured for silent, looping, chromeless kiosk
- * playback. Returns null for anything that isn't a recognizable YouTube URL.
- */
 export const getYouTubeEmbedUrl = (url: string): string | null => {
     let parsed: URL;
 
@@ -110,9 +104,4 @@ export const getYouTubeEmbedUrl = (url: string): string | null => {
 
 const DIRECT_VIDEO_FILE_PATTERN = /\.(mp4|webm|ogg|ogv|mov|m3u8)(\?.*)?$/i;
 
-/**
- * True for links that point straight at a video file/stream (playable in a
- * plain <video> tag). Anything else — a YouTube link handled separately, or
- * an arbitrary webpage link — is not.
- */
 export const isDirectVideoFileUrl = (url: string): boolean => DIRECT_VIDEO_FILE_PATTERN.test(url);

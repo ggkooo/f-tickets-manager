@@ -14,19 +14,12 @@ const resolveInstitutionFromPathname = (pathname: string): Institution | null =>
     return null;
 };
 
-/** The institution (unilab | cre) implied by the current route, if any. */
 export const useRouteInstitution = () => {
     const { pathname } = useRouterLocation();
 
     return useMemo(() => resolveInstitutionFromPathname(pathname), [pathname]);
 };
 
-/**
- * The `:location` route param, validated against the institution implied by
- * the current route (`/unilab/*` vs `/cre/*`). A location slug that belongs
- * to the wrong institution (e.g. a CRE campus under `/unilab/...`) is
- * rejected, returning null just like an unknown slug would.
- */
 export const useRouteLocation = () => {
     const { location } = useParams();
     const institution = useRouteInstitution();

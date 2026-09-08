@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { clearAuthSession, getAuthSession, getUserLocation } from '../../auth/session';
-import { buildLocationLoginPath } from '../../locations';
+import { buildLocationLoginPath, DEFAULT_UNILAB_LOCATION } from '../../locations';
 import AttendantTopBar from './components/AttendantTopBar';
 import CurrentAttendanceCard from './components/CurrentAttendanceCard';
 import HistorySection from './components/HistorySection';
@@ -38,6 +38,7 @@ const Attendant: React.FC = () => {
         isRecallingCurrentTicket,
         isCompletingCurrentTicket,
         isCancellingCurrentTicket,
+        attendanceError,
         handleCallNext,
         handleCallSpecificTicket,
         handleCompleteCurrentTicket,
@@ -61,7 +62,7 @@ const Attendant: React.FC = () => {
     }, []);
 
     const handleLogout = () => {
-        const nextLoginPath = buildLocationLoginPath(userLocation ?? 'campus');
+        const nextLoginPath = buildLocationLoginPath(userLocation ?? DEFAULT_UNILAB_LOCATION);
         clearAuthSession();
         navigate(nextLoginPath, { replace: true });
     };
@@ -85,6 +86,7 @@ const Attendant: React.FC = () => {
                         isRecallingCurrentTicket={isRecallingCurrentTicket}
                         isCompletingCurrentTicket={isCompletingCurrentTicket}
                         isCancellingCurrentTicket={isCancellingCurrentTicket}
+                        attendanceError={attendanceError}
                         onSelectedTypeChange={setSelectedType}
                         onCallNext={() => void handleCallNext()}
                         onRecallCurrentTicket={() => void handleRecallCurrentTicket()}

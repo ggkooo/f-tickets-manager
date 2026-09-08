@@ -60,10 +60,6 @@ const buildPrinterPayload = (form: PrinterFormState) => {
     };
 };
 
-/**
- * Owns the "Configuração de impressoras" card: the list of printers already
- * registered for this location, and the add/edit form for them.
- */
 export const usePrinterSettings = (accessToken: string | undefined, enabled: boolean) => {
     const [printerForms, setPrinterForms] = useState<ManagedPrinterForm[]>([]);
     const [printerForm, setPrinterForm] = useState<PrinterFormState>(createEmptyPrinterForm());
@@ -96,8 +92,6 @@ export const usePrinterSettings = (accessToken: string | undefined, enabled: boo
 
     useEffect(() => {
         if (!enabled) {
-            // Defensive reset for the (practically unreachable) case where
-            // `enabled` flips to false after already being true.
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setPrinterForms([]);
             setPrinterForm(createEmptyPrinterForm());

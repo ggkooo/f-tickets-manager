@@ -4,10 +4,6 @@ import './App.css';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import LocationRouteGuard from './locations/LocationRouteGuard';
 
-// Each screen is its own bundle chunk, loaded only when its route is visited
-// (the totem is only ever showing one screen at a time, so there's no
-// reason to ship the admin panel's PDF/report code, for example, to the
-// public ticket kiosk).
 const GetTicket = lazy(() => import('./screens/GetTicket'));
 const Attendant = lazy(() => import('./screens/Attendent'));
 const Login = lazy(() => import('./screens/Login'));

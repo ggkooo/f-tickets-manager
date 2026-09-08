@@ -18,12 +18,6 @@ type UseCurrentAttendanceArgs = {
     refreshCompletedHistory: () => Promise<void>;
 };
 
-/**
- * Owns the ticket currently being attended and every action that can
- * happen to it: call the next one (or a specific one from the queue),
- * recall, complete, cancel. Reads/removes from the queue via the callbacks
- * passed in rather than owning the queue itself.
- */
 export const useCurrentAttendance = ({
     queue,
     loggedCounter,
@@ -37,24 +31,27 @@ export const useCurrentAttendance = ({
     const [isRecallingCurrentTicket, setIsRecallingCurrentTicket] = useState(false);
     const [isCompletingCurrentTicket, setIsCompletingCurrentTicket] = useState(false);
     const [isCancellingCurrentTicket, setIsCancellingCurrentTicket] = useState(false);
+    const [attendanceError, setAttendanceError] = useState<string | null>(null);
 
     const callTicketAtIndex = async (ticketIndex: number, emptyMessage: string) => {
+        setAttendanceError(null);
+
         if (ticketIndex === -1) {
-            alert(emptyMessage);
+            setAttendanceError(emptyMessage);
             return;
         }
 
         const accessToken = getAccessToken();
 
         if (!accessToken) {
-            alert('Sua sessão expirou. Faça login novamente.');
+            setAttendanceError('Sua sessão expirou. Faça login novamente.');
             return;
         }
 
         const selectedTicket = queue[ticketIndex];
 
         if (!selectedTicket) {
-            alert('Senha selecionada não está mais na fila.');
+            setAttendanceError('Senha selecionada não está mais na fila.');
             return;
         }
 
@@ -72,7 +69,7 @@ export const useCurrentAttendance = ({
             removeTicketFromQueue(selectedTicket.id);
         } catch (error) {
             console.error(error);
-            alert('Falha ao chamar a senha. Tente novamente.');
+            setAttendanceError(error instanceof Error ? error.message : 'Falha ao chamar a senha. Tente novamente.');
         } finally {
             setCallingTicketId(null);
         }
@@ -92,15 +89,17 @@ export const useCurrentAttendance = ({
     };
 
     const handleCompleteCurrentTicket = async () => {
+        setAttendanceError(null);
+
         if (!currentTicket) {
-            alert('Nenhuma senha em atendimento para concluir.');
+            setAttendanceError('Nenhuma senha em atendimento para concluir.');
             return;
         }
 
         const accessToken = getAccessToken();
 
         if (!accessToken) {
-            alert('Sua sessão expirou. Faça login novamente.');
+            setAttendanceError('Sua sessão expirou. Faça login novamente.');
             return;
         }
 
@@ -112,22 +111,24 @@ export const useCurrentAttendance = ({
             setCurrentTicket(null);
         } catch (error) {
             console.error(error);
-            alert('Falha ao concluir a senha. Tente novamente.');
+            setAttendanceError(error instanceof Error ? error.message : 'Falha ao concluir a senha. Tente novamente.');
         } finally {
             setIsCompletingCurrentTicket(false);
         }
     };
 
     const handleRecallCurrentTicket = async () => {
+        setAttendanceError(null);
+
         if (!currentTicket) {
-            alert('Nenhuma senha em atendimento para repetir.');
+            setAttendanceError('Nenhuma senha em atendimento para repetir.');
             return;
         }
 
         const accessToken = getAccessToken();
 
         if (!accessToken) {
-            alert('Sua sessão expirou. Faça login novamente.');
+            setAttendanceError('Sua sessão expirou. Faça login novamente.');
             return;
         }
 
@@ -137,22 +138,24 @@ export const useCurrentAttendance = ({
             await recallTicket(currentTicket.id, accessToken);
         } catch (error) {
             console.error(error);
-            alert('Falha ao repetir a chamada da senha. Tente novamente.');
+            setAttendanceError(error instanceof Error ? error.message : 'Falha ao repetir a chamada da senha. Tente novamente.');
         } finally {
             setIsRecallingCurrentTicket(false);
         }
     };
 
     const handleCancelCurrentTicket = async () => {
+        setAttendanceError(null);
+
         if (!currentTicket) {
-            alert('Nenhuma senha em atendimento para cancelar.');
+            setAttendanceError('Nenhuma senha em atendimento para cancelar.');
             return;
         }
 
         const accessToken = getAccessToken();
 
         if (!accessToken) {
-            alert('Sua sessão expirou. Faça login novamente.');
+            setAttendanceError('Sua sessão expirou. Faça login novamente.');
             return;
         }
 
@@ -164,7 +167,7 @@ export const useCurrentAttendance = ({
             await refreshQueue();
         } catch (error) {
             console.error(error);
-            alert('Falha ao cancelar a senha. Tente novamente.');
+            setAttendanceError(error instanceof Error ? error.message : 'Falha ao cancelar a senha. Tente novamente.');
         } finally {
             setIsCancellingCurrentTicket(false);
         }
@@ -176,6 +179,7 @@ export const useCurrentAttendance = ({
         isRecallingCurrentTicket,
         isCompletingCurrentTicket,
         isCancellingCurrentTicket,
+        attendanceError,
         handleCallNext,
         handleCallSpecificTicket,
         handleCompleteCurrentTicket,
