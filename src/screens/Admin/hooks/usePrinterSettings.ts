@@ -19,7 +19,7 @@ const mapPrinterSettingsToForm = (settings: PrinterSettingsResponse): PrinterFor
     host: settings.host ?? '',
     port: String(settings.port ?? 9100),
     sharePath: settings.share_path ?? '',
-    profile: settings.profile ?? 'simple',
+    profile: settings.profile ?? 'default',
     header: settings.header ?? 'SENHA DE ATENDIMENTO',
 });
 
@@ -55,7 +55,7 @@ const buildPrinterPayload = (form: PrinterFormState) => {
         host: form.connectionType === 'network' ? form.host.trim() : undefined,
         port: form.connectionType === 'network' ? normalizedPort : undefined,
         share_path: form.connectionType === 'shared_windows' ? form.sharePath.trim() : undefined,
-        profile: form.profile.trim() || 'simple',
+        profile: form.profile.trim() || 'default',
         header: form.header.trim() || 'SENHA DE ATENDIMENTO',
     };
 };
