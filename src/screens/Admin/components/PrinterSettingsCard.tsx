@@ -115,7 +115,7 @@ const PrinterFormFields: React.FC<PrinterFormFieldsProps> = ({ form, disabled = 
                         type="text"
                         value={form.profile}
                         onChange={(e) => onFieldChange('profile', e.target.value)}
-                        placeholder="simple"
+                        placeholder="default"
                         disabled={disabled}
                         className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-primary focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
                     />
