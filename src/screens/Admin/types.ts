@@ -55,6 +55,6 @@ export const createEmptyPrinterForm = (): PrinterFormState => ({
     host: '',
     port: '9100',
     sharePath: '',
-    profile: 'simple',
+    profile: 'default',
     header: 'SENHA DE ATENDIMENTO',
 });
