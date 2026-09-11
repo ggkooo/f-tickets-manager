@@ -10,8 +10,8 @@ interface BadgeProps {
 }
 
 const sizeStyles: Record<NonNullable<BadgeProps['size']>, string> = {
-  default: 'px-4 sm:px-5 py-2 sm:py-2.5 text-[clamp(0.95rem,1.3vw,1.8rem)] shadow-md',
-  hero: 'px-6 sm:px-8 py-3 sm:py-4 text-[clamp(1.2rem,2.2vw,3.6rem)] shadow-xl',
+  default: 'px-4 sm:px-5 py-2 sm:py-2.5 text-[clamp(1.05rem,1.4vw,1.95rem)] shadow-md',
+  hero: 'px-6 sm:px-8 py-3 sm:py-4 text-[clamp(1.3rem,2.3vw,3.9rem)] shadow-xl',
 };
 
 const Badge: React.FC<BadgeProps> = ({ color, children, size = 'default', neonBorder = false, className }) => {
