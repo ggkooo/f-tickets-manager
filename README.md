@@ -96,19 +96,29 @@ never produces one, so the alert never plays.
 The video panel doesn't have this problem because it autoplays muted, which
 Chrome always allows.
 
-The fix is a Chrome launch flag, not app code — set it wherever the TV's
-browser is opened (shortcut, startup script, etc.):
+The fix is a Chrome/Chromium launch flag, not app code — set it wherever
+the TV's browser is opened. The Debian kiosks bring the browser up through
+an X autostart script (`~/.config/openbox/autostart`, `~/.xinitrc`, or a
+`~/.config/autostart/*.desktop` entry, depending on how that machine's X
+session is set up) — add the flag to the line that launches the browser
+there:
 
-```bat
-"C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --autoplay-policy=no-user-gesture-required "https://200.132.193.104:8443/unilab/campus/tv"
+```bash
+chromium --kiosk --autoplay-policy=no-user-gesture-required "https://200.132.193.104:8443/unilab/campus/tv" &
 ```
 
 - `--autoplay-policy=no-user-gesture-required` lifts the gesture requirement
-  for that Chrome instance, so `audio.play()` with sound works from the
+  for that browser instance, so `audio.play()` with sound works from the
   first ticket call onward.
 - `--kiosk` is optional but recommended for a dedicated TV display (fullscreen,
   no browser chrome).
+- The binary name varies by install — check what's actually on that machine
+  with `which chromium chromium-browser google-chrome google-chrome-stable`
+  and use whichever exists.
 - Swap the URL for the correct institution/location path for that display.
+- If the browser is already running when you add the flag, kill it and let
+  autostart relaunch it (or reboot the kiosk) — a flag only takes effect
+  when the process is started with it.
 
 If a display *does* get real interaction (e.g. a totem doubling as a TV, or
 someone testing on a desktop), the in-app unlock-on-first-gesture logic in
