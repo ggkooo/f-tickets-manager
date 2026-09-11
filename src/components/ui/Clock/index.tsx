@@ -16,10 +16,10 @@ const Clock: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center gap-4 sm:gap-5 lg:gap-6 select-none">
-      <span className="text-[clamp(1.8rem,3.2vw,4.8rem)] font-mono font-bold text-[#003B71] drop-shadow-sm tracking-wider">
+      <span className="text-[clamp(2.4rem,4.4vw,6.5rem)] font-mono font-bold text-[#003B71] drop-shadow-sm tracking-wider">
         {hours}:{minutes}:{seconds}
       </span>
-      <span className="text-[clamp(0.8rem,1.2vw,1.6rem)] text-slate-600 capitalize">
+      <span className="text-[clamp(1.1rem,1.8vw,2.4rem)] text-slate-600 capitalize">
         {date}
       </span>
     </div>

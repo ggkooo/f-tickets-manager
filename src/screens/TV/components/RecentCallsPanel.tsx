@@ -62,17 +62,17 @@ const RecentCallsPanel: React.FC<RecentCallsPanelProps> = ({ tickets, isLoading,
 
     return (
         <section className="flex-1 min-h-0 flex flex-col bg-white/90 rounded-[1.5rem] lg:rounded-[2rem] shadow-xl border border-slate-100 p-[clamp(0.65rem,1vw,1.35rem)] min-w-0 overflow-hidden">
-            <h3 className="text-[clamp(0.95rem,1.4vw,1.45rem)] font-bold text-[#003B71] mb-[clamp(0.35rem,0.8vh,0.75rem)] border-b-2 border-slate-100 pb-[clamp(0.3rem,0.7vh,0.65rem)] text-center">
+            <h3 className="text-[clamp(1.1rem,1.6vw,1.7rem)] font-bold text-[#003B71] mb-[clamp(0.35rem,0.8vh,0.75rem)] border-b-2 border-slate-100 pb-[clamp(0.3rem,0.7vh,0.65rem)] text-center">
                 Últimas Chamadas
             </h3>
 
             <div className="grid grid-rows-3 gap-[clamp(0.45rem,1vh,1rem)] flex-1 min-h-0">
                 {isLoading ? (
-                    <div className="text-[clamp(0.85rem,1.2vw,1.3rem)] text-slate-400">Carregando...</div>
+                    <div className="text-[clamp(1rem,1.4vw,1.5rem)] text-slate-400">Carregando...</div>
                 ) : error ? (
-                    <div className="text-[clamp(0.85rem,1.1vw,1.2rem)] text-red-500">{error}</div>
+                    <div className="text-[clamp(1rem,1.3vw,1.4rem)] text-red-500">{error}</div>
                 ) : recentTickets.length === 0 ? (
-                    <div className="text-[clamp(0.85rem,1.2vw,1.3rem)] text-slate-400">Nenhuma senha chamada</div>
+                    <div className="text-[clamp(1rem,1.4vw,1.5rem)] text-slate-400">Nenhuma senha chamada</div>
                 ) : (
                     recentTickets.map((ticket, index) => (
                         <div
@@ -80,7 +80,7 @@ const RecentCallsPanel: React.FC<RecentCallsPanelProps> = ({ tickets, isLoading,
                             className={`min-h-0 h-full grid grid-cols-2 items-center gap-[clamp(0.45rem,0.9vw,1rem)] p-[clamp(0.55rem,1vh,0.95rem)] rounded-xl lg:rounded-2xl transition-all duration-300 overflow-hidden ${index === 0 ? 'bg-slate-50/80' : 'bg-slate-50/40'}`}
                         >
                             <div className="min-w-0 flex items-center gap-3">
-                                <span className="text-[clamp(1.1rem,2.2vw,2.4rem)] font-bold text-slate-700 truncate leading-none">
+                                <span className="text-[clamp(1.25rem,2.4vw,2.65rem)] font-bold text-slate-700 truncate leading-none">
                                     {ticket.key}
                                 </span>
                             </div>
@@ -92,9 +92,9 @@ const RecentCallsPanel: React.FC<RecentCallsPanelProps> = ({ tickets, isLoading,
                                         color={getServiceBadgeColor(ticket.serviceType)}
                                     />
                                 </div>
-                                <span className="text-[clamp(0.7rem,1rem,1.1rem)] text-slate-500 block text-right whitespace-nowrap">
+                                <span className="text-[clamp(0.8rem,1.1vw,1.2rem)] text-slate-500 block text-right whitespace-nowrap">
                                     Guichê{' '}
-                                    <span className="text-[clamp(1rem,1.8vw,2rem)] font-bold text-[#003B71] ml-1 leading-none align-middle">
+                                    <span className="text-[clamp(1.1rem,2vw,2.2rem)] font-bold text-[#003B71] ml-1 leading-none align-middle">
                                         {formatCounterLabel(ticket.counterName)}
                                     </span>
                                 </span>

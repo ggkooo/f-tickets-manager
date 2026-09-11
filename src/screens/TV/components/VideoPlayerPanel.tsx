@@ -18,7 +18,7 @@ const VideoPlayerPanel: React.FC<VideoPlayerPanelProps> = ({ media, hasMultipleI
         <div className="flex-[1.15] min-h-[160px] sm:min-h-[180px] lg:min-h-[200px] xl:min-h-[260px] 2xl:min-h-[300px] flex flex-col justify-end">
             <div className="w-full bg-blue-100/40 rounded-xl lg:rounded-2xl shadow-inner p-2 sm:p-2.5 flex justify-center items-center border border-blue-200 h-full min-h-0">
                 {error ? (
-                    <span className="text-red-500 text-[clamp(1rem,1.2vw,1.4rem)] text-center px-6">{error}</span>
+                    <span className="text-red-500 text-[clamp(1.4rem,1.8vw,2rem)] text-center px-6">{error}</span>
                 ) : media?.kind === 'video' ? (
                     <video
                         ref={(el) => {
