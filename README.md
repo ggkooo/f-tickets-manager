@@ -84,6 +84,36 @@ don't see a browser warning.
 Whenever frontend code changes, `npm run build` again — Caddy serves
 whatever is currently in `dist/`, not live code.
 
+### TV Display: Enabling the Call Alert Sound
+
+The TV screen (`/unilab/:location/tv`, `/cre/:location/tv`) plays a sound
+whenever a new ticket is called. Chrome blocks audio with sound from
+autoplaying until the page receives a real user gesture (click, tap, or
+keypress) — the app tries to "unlock" playback on the first such gesture,
+but a TV display that's just a monitor with no mouse, keyboard, or touch
+never produces one, so the alert never plays.
+
+The video panel doesn't have this problem because it autoplays muted, which
+Chrome always allows.
+
+The fix is a Chrome launch flag, not app code — set it wherever the TV's
+browser is opened (shortcut, startup script, etc.):
+
+```bat
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --autoplay-policy=no-user-gesture-required "https://200.132.193.104:8443/unilab/campus/tv"
+```
+
+- `--autoplay-policy=no-user-gesture-required` lifts the gesture requirement
+  for that Chrome instance, so `audio.play()` with sound works from the
+  first ticket call onward.
+- `--kiosk` is optional but recommended for a dedicated TV display (fullscreen,
+  no browser chrome).
+- Swap the URL for the correct institution/location path for that display.
+
+If a display *does* get real interaction (e.g. a totem doubling as a TV, or
+someone testing on a desktop), the in-app unlock-on-first-gesture logic in
+`useTicketAlertSound.ts` still works as a fallback without this flag.
+
 ### Build
 
 ```bash
